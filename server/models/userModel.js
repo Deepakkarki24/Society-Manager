@@ -28,12 +28,6 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
   },
-  queries: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "query",
-    },
-  ],
 });
 
 const User = mongoose.model("User", userSchema);
