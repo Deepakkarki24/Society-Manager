@@ -131,3 +131,38 @@ export const logout = async (req, res) => {
     message: "User logged out successfully!",
   });
 };
+
+export const checkAuth = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token not found",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWTSECRETKEY);
+
+    const user = await userModel.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User authenticated successfully!",
+      user,
+    });
+  } catch (err) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token!",
+    });
+  }
+};

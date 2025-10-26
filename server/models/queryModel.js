@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const querySchema = mongoose.Schema({
-  userId: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "User",
   },
   title: {
     type: String,
@@ -14,6 +14,11 @@ const querySchema = mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "in-progress", "resolved"],
+    default: "pending",
   },
   image: { type: String },
   createdAt: {
