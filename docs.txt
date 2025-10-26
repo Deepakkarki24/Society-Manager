@@ -1,0 +1,15 @@
+
+------> SOCIETY APP MANAGER
+
+--> Functionality
+
+1. Register/login (user/admin)
+jwt token, bcrypt password hashing, middlewares for auth checking.
+
+2. User can post their queries related to society with title, description, image(optional).
+
+3. Admin can see all the queries from all the users with their names and id's.
+
+4. Admin only take the action on the queries and mark them as in-progress or resolved, initially the query will be shows as pending.
+
+5. The query history will be saved in user dashboard and the status.
