@@ -113,13 +113,29 @@ export const deleteQuery = async (req, res) => {
   }
 };
 
-export const getUserQueries = async (req, res) => {
+export const getMyQueries = async (req, res) => {
   try {
     const queries = await queryModel.find({ createdBy: req.user.id });
 
     return res.status(200).json({
       success: true,
       message: "User queries fetched!",
+      queries,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const getAllQueries = async (req, res) => {
+  try {
+    const queries = await queryModel.find();
+    return res.status(200).json({
+      success: true,
+      message: "All queries fetched!",
       queries,
     });
   } catch (err) {
