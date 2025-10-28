@@ -1,14 +1,14 @@
 :root {
-    --color-primary: #00BCD4;
-    /* Bright Blue */
+    --color-primary: #EA763F;
     --color-secondary: #1E293B;
-    /* Slate Gray */
     --color-accent: #38BDF8;
-    /* Light Blue */
     --color-background: #F8FAFC;
-    /* Background */
     --color-text: #0F172A;
-    /* Main Text */
-    /* Hover text color */
-    --color-text-hover: #ffffff
+    --color-text-hover: #fff;
+}
+
+
+input::placeholder {
+    color: #64748b;
+    opacity: 1;
 }

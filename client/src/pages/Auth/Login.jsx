@@ -1,39 +1,63 @@
 import React from "react";
+import { motion } from "framer-motion";
 import Navbar from "../../components/Navbar";
 
-const Login = () => {
+const LoginPage = () => {
   return (
     <div>
       <Navbar />
-      <div className="mt-10 px-10">
-        <h1 className="text-(--color-text) relative inline-block text-3xl mb-5 font-semibold after:content-[''] after:absolute after:bg-(--color-primary) after:rounded-2xl after:h-1 after:w-1/3 after:left-0 after:bottom-0 ">
-          Login
-        </h1>
-        <form className="shadow-md rounded-2xl p-10 max-w-1/2">
-          <div className="flex gap-2">
-            <input
-              className="border border-[#ccc] p-2 w-1/2 mb-3"
-              type="email"
-              placeholder="Email"
-              name="email"
-            />
-            <input
-              className="border border-[#ccc] p-2 w-1/2 mb-3"
-              type="password"
-              name="password"
-              placeholder="Password"
-            />
-          </div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="bg-white mt-28 mx-auto shadow-xl rounded-2xl w-full max-w-md p-10"
+      >
+        {/* Header */}
+        <h2 className="text-3xl font-bold text-center text-(--color-secondary) mb-2">
+          Welcome Back
+        </h2>
+        <p className="text-center text-gray-500 mb-6">
+          Please sign in to continue
+        </p>
+
+        {/* Form */}
+        <form className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Email"
+            className="px-3 py-2 border rounded focus:outline-none border-(--color-secondary) focus:border-(--color-primary) transition-all duration-300"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="px-3 py-2 border rounded focus:outline-none border-(--color-secondary) focus:border-(--color-primary) transition-all duration-300"
+          />
+
           <button
-            className="w-full border border-(--color-primary) text-(--color-primary) px-2 py-1 rounded font-semibold hover:bg-(--color-primary) hover:text-(--color-text-hover) transition-all ease-in"
             type="submit"
+            className="bg-(--color-primary) text-(--color-text-hover) py-2 rounded-lg mt-2 font-medium hover:bg-(--color-secondary) transition-all duration-300"
           >
-            Submit
+            Sign In
           </button>
         </form>
-      </div>
+
+        {/* Divider */}
+        <div className="flex items-center my-6">
+          <div className="grow h-px bg-gray-300" />
+          <span className="text-gray-500 text-sm mx-3">or</span>
+          <div className="grow h-px bg-gray-300" />
+        </div>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-600 mt-6">
+          Don’t have an account?{" "}
+          <span className="text-(--color-accent) cursor-pointer hover:underline">
+            Sign up
+          </span>
+        </p>
+      </motion.div>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
