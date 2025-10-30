@@ -134,18 +134,7 @@ export const logout = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Token not found",
-      });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWTSECRETKEY);
-
-    const user = await userModel.findById(decoded.id).select("-password");
+    const user = await userModel.findById(req.user.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -164,5 +153,16 @@ export const checkAuth = async (req, res) => {
       success: false,
       message: "Invalid or expired token!",
     });
+  }
+};
+
+// check if there is any admin in the database
+export const isAdmin = async (req, res) => {
+  const isAdmin = await userModel.findOne({ role: "admin" });
+
+  if (isAdmin) {
+    return res.status(200).json({ success: true });
+  } else if (!isAdmin) {
+    return res.status(402).json({ sucess: false });
   }
 };

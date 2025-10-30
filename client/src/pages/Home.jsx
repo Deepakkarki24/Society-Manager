@@ -5,9 +5,30 @@ import { FaUsers, FaBell, FaClipboardList } from "react-icons/fa6";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+const featureCards = [
+  {
+    title: "Query Management",
+    icon: FaClipboardList,
+    content:
+      "Track, assign, and resolve resident queries efficiently — with real-time status updates.",
+  },
+  {
+    title: "Announcements",
+    icon: FaBell,
+    content:
+      "Send important updates or alerts to all residents instantly with in-app announcements.",
+  },
+  {
+    title: "Admin Control",
+    icon: FaUsers,
+    content:
+      "Give admins full control over user management, query tracking, and society-wide data.",
+  },
+];
+
 const Home = () => {
   return (
-    <>
+    <div className="bg-(--color-primary)">
       <Navbar />
       <div className="mt-30 bg-(--color-background) text-(--color-text) flex flex-col items-center justify-center px-6 py-10">
         {/* Hero Section */}
@@ -41,49 +62,26 @@ const Home = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="grid md:grid-cols-3 gap-8 mt-20 max-w-5xl w-full"
+          className="grid bg-transparent md:grid-cols-3 gap-8 mt-20 max-w-5xl w-full"
         >
-          {/* Card 1 */}
-          <div className="p-6 bg-white rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-lg transition-all">
-            <FaClipboardList className="text-(--color-primary) text-4xl mb-3" />
-            <h3 className="text-xl font-semibold mb-2 text-(--color-secondary)">
-              Query Management
-            </h3>
-            <p className="text-sm text-(--color-text)">
-              Track, assign, and resolve resident queries efficiently — with
-              real-time status updates.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="p-6 bg-white rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-lg transition-all">
-            <FaBell className="text-(--color-primary) text-4xl mb-3" />
-            <h3 className="text-xl font-semibold mb-2 text-(--color-secondary)">
-              Announcements
-            </h3>
-            <p className="text-sm text-(--color-text)">
-              Send important updates or alerts to all residents instantly with
-              in-app announcements.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="p-6 bg-white rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-lg transition-all">
-            <FaUsers className="text-(--color-primary) text-4xl mb-3" />
-            <h3 className="text-xl font-semibold mb-2 text-(--color-secondary)">
-              Admin Control
-            </h3>
-            <p className="text-sm text-(--color-text)">
-              Give admins full control over user management, query tracking, and
-              society-wide data.
-            </p>
-          </div>
+          {featureCards.map((card, i) => (
+            <div
+              key={i}
+              className="p-6 bg-(--color-background2) rounded-xl shadow-md shadow-teal-700 flex flex-col items-center text-center hover:shadow-lg transition-all"
+            >
+              <card.icon className="text-(--color-primary) text-4xl mb-3" />
+              <h3 className="text-xl font-semibold mb-2 text-(--color-secondary)">
+                {card.title}
+              </h3>
+              <p className="text-sm text-(--color-text)">{card.content}</p>
+            </div>
+          ))}
         </motion.div>
 
         {/* Footer */}
         <Footer />
       </div>
-    </>
+    </div>
   );
 };
 

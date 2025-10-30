@@ -1,8 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Navbar from "../../components/Navbar";
+import { useLogin } from "./useLogin.js";
 
 const LoginPage = () => {
+  const { formData, formError, loading, handelChange, handleSubmit } =
+    useLogin();
+  const { email, password } = formData;
   return (
     <div>
       <Navbar />
@@ -13,31 +17,43 @@ const LoginPage = () => {
         className="bg-white mt-28 mx-auto shadow-xl rounded-2xl w-full max-w-md p-10"
       >
         {/* Header */}
-        <h2 className="text-3xl font-bold text-center text-(--color-secondary) mb-2">
-          Welcome Back
+        <h2 className="text-3xl font-bold text-center text-(--color-background) mb-2">
+          Welcome <span className="text-(--color-primary)">Back</span>
         </h2>
         <p className="text-center text-gray-500 mb-6">
           Please sign in to continue
         </p>
 
         {/* Form */}
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="email"
+            name="email"
+            value={email}
+            onChange={handelChange}
             placeholder="Email"
             className="px-3 py-2 border rounded focus:outline-none border-(--color-secondary) focus:border-(--color-primary) transition-all duration-300"
           />
           <input
             type="password"
+            name="password"
+            value={password}
+            onChange={handelChange}
             placeholder="Password"
             className="px-3 py-2 border rounded focus:outline-none border-(--color-secondary) focus:border-(--color-primary) transition-all duration-300"
           />
+
+          {formError && (
+            <p className="text-red-500 text-sm font-semibold mb-2">
+              {formError}
+            </p>
+          )}
 
           <button
             type="submit"
             className="bg-(--color-primary) text-(--color-text-hover) py-2 rounded-lg mt-2 font-medium hover:bg-(--color-secondary) transition-all duration-300"
           >
-            Sign In
+            {loading ? "Signin.." : "Sign In"}
           </button>
         </form>
 
