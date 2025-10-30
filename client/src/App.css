@@ -1,10 +1,15 @@
 :root {
-    --color-primary: #EA763F;
-    --color-secondary: #1E293B;
+    --color-primary: #27E0B3;
+    --color-secondary: #eadbdb;
     --color-accent: #38BDF8;
-    --color-background: #F8FAFC;
-    --color-text: #0F172A;
+    --color-background: #0C0C0C;
+    --color-background2: #232323;
+    --color-text: #eadbdb;
     --color-text-hover: #fff;
+}
+
+body {
+    background-color: var(--color-background2);
 }
 
 
