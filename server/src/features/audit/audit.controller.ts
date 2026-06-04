@@ -1,14 +1,13 @@
-import { Response } from 'express';
-import { AuditLog } from '../../models';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { AuthRequest } from '../../middleware/auth';
-import { getPagination, paginatedResponse } from '../../utils/pagination';
+import { Response } from "express";
+import { AuditLog } from "../../models";
+import { AuthRequest } from "../../middleware/auth";
+import { getPagination, paginatedResponse } from "../../utils/pagination";
 
-export const getAuditLogs = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const getAuditLogs = async (req: AuthRequest, res: Response) => {
   const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
   const filter: Record<string, unknown> = {};
 
-  if (req.user!.role !== 'super_admin') {
+  if (req.user!.role !== "super_admin") {
     filter.society = req.user!.society;
   } else if (req.query.societyId) {
     filter.society = req.query.societyId;
@@ -19,7 +18,7 @@ export const getAuditLogs = asyncHandler(async (req: AuthRequest, res: Response)
 
   const [logs, total] = await Promise.all([
     AuditLog.find(filter)
-      .populate('user', 'name email role')
+      .populate("user", "name email role")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit),
@@ -27,4 +26,4 @@ export const getAuditLogs = asyncHandler(async (req: AuthRequest, res: Response)
   ]);
 
   res.json({ success: true, ...paginatedResponse(logs, total, page, limit) });
-});
+};
