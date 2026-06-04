@@ -19,8 +19,8 @@ export const AnalyticsPage = () => {
   const getPlatformAnalyticsData = async () => {
     try {
       const res = await getPlatformAnalytics()
-      // setPlatform(res.data?)
-      console.log(res)
+      const { data } = res.data as any
+      setPlatform(data)
     } catch (err) {
       console.log(err)
     } finally {
@@ -32,7 +32,8 @@ export const AnalyticsPage = () => {
   const getDashboardAnalyticsData = async () => {
     try {
       const res = await getDashboardAnalytics()
-      // setPlatform(res.data?)
+      const { data } = res.data as any
+      setDashboard(data)
       console.log(res)
     } catch (err) {
       console.log(err)

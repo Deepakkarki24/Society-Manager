@@ -11,6 +11,7 @@ import type { Announcement } from '@/types';
 import toast from 'react-hot-toast';
 import { Megaphone } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import api from '@/api-manager/apiInterceptor';
 
 export const AnnouncementsPage = () => {
   const { user } = useAppSelector((s) => s.auth);
@@ -19,13 +20,13 @@ export const AnnouncementsPage = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const load = () => {
-    // api.get('/announcements').then(({ data }) => setItems(data.data || []));
+    api.get('/announcements').then(({ data }) => setItems(data.data || []));
   };
 
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, unknown>) => {
-    // await api.post('/announcements', data);
+    await api.post('/announcements', data);
     toast.success('Announcement created');
     setModalOpen(false);
     reset();

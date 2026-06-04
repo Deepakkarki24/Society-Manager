@@ -1,8 +1,10 @@
-export declare const createSociety: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const getSocieties: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const getSociety: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const updateSociety: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const deleteSociety: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const assignSocietyAdmin: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const getSocietyStats: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
+import { Response } from "express";
+import { AuthRequest } from "../../middleware/auth";
+export declare const createSociety: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getSocieties: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getSociety: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const updateSociety: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const deleteSociety: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const assignSocietyAdmin: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getSocietyStats: (req: AuthRequest, res: Response) => Promise<void>;
 //# sourceMappingURL=society.controller.d.ts.map

@@ -1,5 +1,7 @@
-export declare const getNotifications: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const markAsRead: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const markAllAsRead: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const getUnreadCount: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
+import { Response } from "express";
+import { AuthRequest } from "../../middleware/auth";
+export declare const getNotifications: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const markAsRead: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const markAllAsRead: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getUnreadCount: (req: AuthRequest, res: Response) => Promise<void>;
 //# sourceMappingURL=notification.controller.d.ts.map

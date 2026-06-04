@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.cloudinary = exports.configureCloudinary = void 0;
 const cloudinary_1 = require("cloudinary");
 Object.defineProperty(exports, "cloudinary", { enumerable: true, get: function () { return cloudinary_1.v2; } });
+const env_1 = require("./env");
 const configureCloudinary = () => {
-    const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
-    if (CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET) {
+    if (env_1.CLOUDINARY_CLOUD_NAME && env_1.CLOUDINARY_API_KEY && env_1.CLOUDINARY_API_SECRET) {
         cloudinary_1.v2.config({
-            cloud_name: CLOUDINARY_CLOUD_NAME,
-            api_key: CLOUDINARY_API_KEY,
-            api_secret: CLOUDINARY_API_SECRET,
+            cloud_name: env_1.CLOUDINARY_CLOUD_NAME,
+            api_key: env_1.CLOUDINARY_API_KEY,
+            api_secret: env_1.CLOUDINARY_API_SECRET,
         });
     }
 };

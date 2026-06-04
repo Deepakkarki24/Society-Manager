@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { UserRole } from '../types';
+import { Request, Response, NextFunction } from "express";
+import { UserRole } from "../types";
 export interface AuthRequest extends Request {
     user?: {
         _id: string;

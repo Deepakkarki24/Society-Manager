@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document } from "mongoose";
 export interface IAuditLog extends Document {
     user: mongoose.Types.ObjectId;
     action: string;

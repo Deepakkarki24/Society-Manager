@@ -1,5 +1,5 @@
-import mongoose, { Document } from 'mongoose';
-import { UserRole } from '../types';
+import mongoose, { Document } from "mongoose";
+import { UserRole } from "../types";
 export interface IFamilyMember {
     name: string;
     relation: string;

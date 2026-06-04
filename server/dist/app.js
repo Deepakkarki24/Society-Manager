@@ -12,19 +12,20 @@ const compression_1 = __importDefault(require("compression"));
 const routes_1 = __importDefault(require("./routes"));
 const errorHandler_1 = require("./middleware/errorHandler");
 const cloudinary_1 = require("./config/cloudinary");
+const env_1 = require("./config/env");
 const createApp = () => {
     const app = (0, express_1.default)();
     (0, cloudinary_1.configureCloudinary)();
     app.use((0, helmet_1.default)());
     app.use((0, cors_1.default)({
-        origin: process.env.CLIENT_URL || 'http://localhost:5173',
+        origin: env_1.CLIENT_URL || "http://localhost:5173",
         credentials: true,
     }));
     app.use((0, compression_1.default)());
-    app.use((0, morgan_1.default)('dev'));
-    app.use(express_1.default.json({ limit: '10mb' }));
+    app.use((0, morgan_1.default)("dev"));
+    app.use(express_1.default.json({ limit: "10mb" }));
     app.use(express_1.default.urlencoded({ extended: true }));
-    app.use('/api', routes_1.default);
+    app.use("/api", routes_1.default);
     app.use(errorHandler_1.notFound);
     app.use(errorHandler_1.errorHandler);
     return app;

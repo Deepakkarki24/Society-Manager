@@ -47,15 +47,21 @@ const familyMemberSchema = new mongoose_1.Schema({
 }, { _id: true });
 const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+    },
     password: { type: String, required: true, minlength: 6, select: false },
     phone: { type: String, trim: true },
     role: {
         type: String,
-        enum: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'],
+        enum: ["super_admin", "society_admin", "resident", "maintenance_staff"],
         required: true,
     },
-    society: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Society' },
+    society: { type: mongoose_1.Schema.Types.ObjectId, ref: "Society" },
     flatNumber: String,
     block: String,
     avatar: String,
@@ -63,9 +69,9 @@ const userSchema = new mongoose_1.Schema({
     familyMembers: [familyMemberSchema],
 }, { timestamps: true });
 userSchema.index({ society: 1, role: 1 });
-userSchema.index({ email: 1 });
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password'))
+// userSchema.index({ email: 1 });
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password"))
         return next();
     this.password = await bcryptjs_1.default.hash(this.password, 12);
     next();
@@ -73,5 +79,5 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = async function (candidate) {
     return bcryptjs_1.default.compare(candidate, this.password);
 };
-exports.User = mongoose_1.default.model('User', userSchema);
+exports.User = mongoose_1.default.model("User", userSchema);
 //# sourceMappingURL=User.js.map
