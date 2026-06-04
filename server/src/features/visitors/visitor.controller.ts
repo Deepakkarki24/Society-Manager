@@ -1,40 +1,39 @@
-import { Response } from 'express';
-import { Visitor, User } from '../../models';
-import { ApiError } from '../../utils/ApiError';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { AuthRequest } from '../../middleware/auth';
-import { getPagination, paginatedResponse } from '../../utils/pagination';
+import { Response } from "express";
+import { Visitor, User } from "../../models";
+import { ApiError } from "../../utils/ApiError";
+import { AuthRequest } from "../../middleware/auth";
+import { getPagination, paginatedResponse } from "../../utils/pagination";
 
 const getSocietyId = (req: AuthRequest) =>
-  req.user!.role === 'super_admin'
+  req.user!.role === "super_admin"
     ? (req.query.societyId as string)
     : req.user!.society;
 
-export const preApproveVisitor = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const preApproveVisitor = async (req: AuthRequest, res: Response) => {
   const societyId = req.user!.society;
-  if (!societyId) throw new ApiError(400, 'Society context required');
+  if (!societyId) throw new ApiError(400, "Society context required");
 
   const host = await User.findById(req.user!._id);
-  const flatNumber = req.body.flatNumber || host?.flatNumber || 'N/A';
+  const flatNumber = req.body.flatNumber || host?.flatNumber || "N/A";
 
   const visitor = await Visitor.create({
     ...req.body,
     society: societyId,
     hostResident: req.user!._id,
     flatNumber,
-    status: 'pre_approved',
+    status: "pre_approved",
   });
 
   res.status(201).json({ success: true, data: visitor });
-});
+};
 
-export const getVisitors = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const getVisitors = async (req: AuthRequest, res: Response) => {
   const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
   const societyId = getSocietyId(req);
   const filter: Record<string, unknown> = {};
 
   if (societyId) filter.society = societyId;
-  if (req.user!.role === 'resident') filter.hostResident = req.user!._id;
+  if (req.user!.role === "resident") filter.hostResident = req.user!._id;
   if (req.query.status) filter.status = req.query.status;
   if (req.query.date) {
     const date = new Date(req.query.date as string);
@@ -45,48 +44,51 @@ export const getVisitors = asyncHandler(async (req: AuthRequest, res: Response) 
 
   const [visitors, total] = await Promise.all([
     Visitor.find(filter)
-      .populate('hostResident', 'name flatNumber block')
-      .populate('verifiedBy', 'name')
+      .populate("hostResident", "name flatNumber block")
+      .populate("verifiedBy", "name")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit),
     Visitor.countDocuments(filter),
   ]);
 
-  res.json({ success: true, ...paginatedResponse(visitors, total, page, limit) });
-});
+  res.json({
+    success: true,
+    ...paginatedResponse(visitors, total, page, limit),
+  });
+};
 
-export const checkInVisitor = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const checkInVisitor = async (req: AuthRequest, res: Response) => {
   const visitor = await Visitor.findByIdAndUpdate(
     req.params.id,
     {
-      status: 'checked_in',
+      status: "checked_in",
       checkInAt: new Date(),
       verifiedBy: req.user!._id,
       notes: req.body.notes,
     },
-    { new: true }
+    { new: true },
   );
-  if (!visitor) throw new ApiError(404, 'Visitor not found');
+  if (!visitor) throw new ApiError(404, "Visitor not found");
   res.json({ success: true, data: visitor });
-});
+};
 
-export const checkOutVisitor = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const checkOutVisitor = async (req: AuthRequest, res: Response) => {
   const visitor = await Visitor.findByIdAndUpdate(
     req.params.id,
-    { status: 'checked_out', checkOutAt: new Date() },
-    { new: true }
+    { status: "checked_out", checkOutAt: new Date() },
+    { new: true },
   );
-  if (!visitor) throw new ApiError(404, 'Visitor not found');
+  if (!visitor) throw new ApiError(404, "Visitor not found");
   res.json({ success: true, data: visitor });
-});
+};
 
-export const rejectVisitor = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const rejectVisitor = async (req: AuthRequest, res: Response) => {
   const visitor = await Visitor.findByIdAndUpdate(
     req.params.id,
-    { status: 'rejected', notes: req.body.notes },
-    { new: true }
+    { status: "rejected", notes: req.body.notes },
+    { new: true },
   );
-  if (!visitor) throw new ApiError(404, 'Visitor not found');
+  if (!visitor) throw new ApiError(404, "Visitor not found");
   res.json({ success: true, data: visitor });
-});
+};

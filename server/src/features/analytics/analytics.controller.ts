@@ -1,11 +1,12 @@
-import { Response } from 'express';
-import mongoose from 'mongoose';
-import { Complaint, Payment, User, Society, Announcement } from '../../models';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { AuthRequest } from '../../middleware/auth';
+import { Response } from "express";
+import mongoose from "mongoose";
+import { Complaint, Payment, User, Society, Announcement } from "../../models";
+import { AuthRequest } from "../../middleware/auth";
 
-const getSocietyScope = (req: AuthRequest): mongoose.Types.ObjectId | undefined => {
-  if (req.user!.role === 'super_admin') {
+const getSocietyScope = (
+  req: AuthRequest,
+): mongoose.Types.ObjectId | undefined => {
+  if (req.user!.role === "super_admin") {
     return req.query.societyId
       ? new mongoose.Types.ObjectId(req.query.societyId as string)
       : undefined;
@@ -15,7 +16,10 @@ const getSocietyScope = (req: AuthRequest): mongoose.Types.ObjectId | undefined 
     : undefined;
 };
 
-export const getDashboardAnalytics = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const getDashboardAnalytics = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   const societyId = getSocietyScope(req);
   const match = societyId ? { society: societyId } : {};
 
@@ -29,14 +33,14 @@ export const getDashboardAnalytics = asyncHandler(async (req: AuthRequest, res: 
     totalSocieties,
   ] = await Promise.all([
     Complaint.countDocuments(match),
-    Complaint.countDocuments({ ...match, status: 'resolved' }),
+    Complaint.countDocuments({ ...match, status: "resolved" }),
     Complaint.countDocuments({
       ...match,
-      status: { $in: ['pending', 'assigned', 'in_progress', 'reopened'] },
+      status: { $in: ["pending", "assigned", "in_progress", "reopened"] },
     }),
     Complaint.aggregate([
       { $match: match },
-      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]),
     Complaint.aggregate([
@@ -44,22 +48,26 @@ export const getDashboardAnalytics = asyncHandler(async (req: AuthRequest, res: 
       {
         $group: {
           _id: {
-            year: { $year: '$createdAt' },
-            month: { $month: '$createdAt' },
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
           },
           count: { $sum: 1 },
           resolved: {
-            $sum: { $cond: [{ $eq: ['$status', 'resolved'] }, 1, 0] },
+            $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] },
           },
         },
       },
-      { $sort: { '_id.year': -1, '_id.month': -1 } },
+      { $sort: { "_id.year": -1, "_id.month": -1 } },
       { $limit: 12 },
     ]),
     societyId
-      ? User.countDocuments({ society: societyId, role: 'resident', isActive: true })
-      : User.countDocuments({ role: 'resident', isActive: true }),
-    req.user!.role === 'super_admin'
+      ? User.countDocuments({
+          society: societyId,
+          role: "resident",
+          isActive: true,
+        })
+      : User.countDocuments({ role: "resident", isActive: true }),
+    req.user?.role === "super_admin"
       ? Society.countDocuments({ isActive: true })
       : Promise.resolve(1),
   ]);
@@ -69,9 +77,9 @@ export const getDashboardAnalytics = asyncHandler(async (req: AuthRequest, res: 
     { $match: paymentMatch },
     {
       $group: {
-        _id: '$status',
+        _id: "$status",
         count: { $sum: 1 },
-        amount: { $sum: '$amount' },
+        amount: { $sum: "$amount" },
       },
     },
   ]);
@@ -106,47 +114,48 @@ export const getDashboardAnalytics = asyncHandler(async (req: AuthRequest, res: 
       },
     },
   });
-});
+};
 
-export const getSuperAdminAnalytics = asyncHandler(
-  async (req: AuthRequest, res: Response) => {
-    const societiesByCity = await Society.aggregate([
-      { $match: { isActive: true } },
-      { $group: { _id: '$city', count: { $sum: 1 } } },
-    ]);
+export const getSuperAdminAnalytics = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  const societiesByCity = await Society.aggregate([
+    { $match: { isActive: true } },
+    { $group: { _id: "$city", count: { $sum: 1 } } },
+  ]);
 
-    const complaintsBySociety = await Complaint.aggregate([
-      {
-        $group: {
-          _id: '$society',
-          total: { $sum: 1 },
-          resolved: {
-            $sum: { $cond: [{ $eq: ['$status', 'resolved'] }, 1, 0] },
-          },
+  const complaintsBySociety = await Complaint.aggregate([
+    {
+      $group: {
+        _id: "$society",
+        total: { $sum: 1 },
+        resolved: {
+          $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] },
         },
       },
-      { $limit: 10 },
-      {
-        $lookup: {
-          from: 'societies',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'society',
-        },
+    },
+    { $limit: 10 },
+    {
+      $lookup: {
+        from: "societies",
+        localField: "_id",
+        foreignField: "_id",
+        as: "society",
       },
-      { $unwind: '$society' },
-      {
-        $project: {
-          societyName: '$society.name',
-          total: 1,
-          resolved: 1,
-        },
+    },
+    { $unwind: "$society" },
+    {
+      $project: {
+        societyName: "$society.name",
+        total: 1,
+        resolved: 1,
       },
-    ]);
+    },
+  ]);
 
-    res.json({
-      success: true,
-      data: { societiesByCity, complaintsBySociety },
-    });
-  }
-);
+  res.json({
+    success: true,
+    data: { societiesByCity, complaintsBySociety },
+  });
+};

@@ -1,22 +1,21 @@
-import { Response } from 'express';
-import { Payment, Society, User } from '../../models';
-import { ApiError } from '../../utils/ApiError';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { AuthRequest } from '../../middleware/auth';
-import { getPagination, paginatedResponse } from '../../utils/pagination';
-import { createNotification } from '../../services/notification.service';
+import { Response } from "express";
+import { Payment, Society, User } from "../../models";
+import { ApiError } from "../../utils/ApiError";
+import { AuthRequest } from "../../middleware/auth";
+import { getPagination, paginatedResponse } from "../../utils/pagination";
+import { createNotification } from "../../services/notification.service";
 
-export const generateInvoices = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const generateInvoices = async (req: AuthRequest, res: Response) => {
   const { month, year } = req.body;
   const societyId = req.user!.society;
-  if (!societyId) throw new ApiError(400, 'Society context required');
+  if (!societyId) throw new ApiError(400, "Society context required");
 
   const society = await Society.findById(societyId);
-  if (!society) throw new ApiError(404, 'Society not found');
+  if (!society) throw new ApiError(404, "Society not found");
 
   const residents = await User.find({
     society: societyId,
-    role: 'resident',
+    role: "resident",
     isActive: true,
   });
 
@@ -39,27 +38,29 @@ export const generateInvoices = asyncHandler(async (req: AuthRequest, res: Respo
       month,
       year,
       dueDate,
-      status: 'pending',
+      status: "pending",
     });
     invoices.push(payment);
 
     await createNotification({
       recipientId: resident._id.toString(),
-      title: 'Maintenance Invoice',
+      title: "Maintenance Invoice",
       message: `Invoice for ${month}/${year} - ₹${society.maintenanceAmount}`,
-      type: 'payment',
-      link: '/payments',
+      type: "payment",
+      link: "/payments",
     });
   }
 
-  res.status(201).json({ success: true, data: invoices, count: invoices.length });
-});
+  res
+    .status(201)
+    .json({ success: true, data: invoices, count: invoices.length });
+};
 
-export const getPayments = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const getPayments = async (req: AuthRequest, res: Response) => {
   const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
   const filter: Record<string, unknown> = {};
 
-  if (req.user!.role === 'resident') {
+  if (req.user!.role === "resident") {
     filter.resident = req.user!._id;
   } else if (req.user!.society) {
     filter.society = req.user!.society;
@@ -71,51 +72,54 @@ export const getPayments = asyncHandler(async (req: AuthRequest, res: Response) 
 
   const [payments, total] = await Promise.all([
     Payment.find(filter)
-      .populate('resident', 'name flatNumber block email')
+      .populate("resident", "name flatNumber block email")
       .sort({ year: -1, month: -1 })
       .skip(skip)
       .limit(limit),
     Payment.countDocuments(filter),
   ]);
 
-  res.json({ success: true, ...paginatedResponse(payments, total, page, limit) });
-});
+  res.json({
+    success: true,
+    ...paginatedResponse(payments, total, page, limit),
+  });
+};
 
-export const recordPayment = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const recordPayment = async (req: AuthRequest, res: Response) => {
   const payment = await Payment.findById(req.params.id);
-  if (!payment) throw new ApiError(404, 'Payment not found');
+  if (!payment) throw new ApiError(404, "Payment not found");
 
   if (
-    req.user!.role === 'resident' &&
+    req.user!.role === "resident" &&
     payment.resident.toString() !== req.user!._id
   ) {
-    throw new ApiError(403, 'Access denied');
+    throw new ApiError(403, "Access denied");
   }
 
-  payment.status = 'paid';
+  payment.status = "paid";
   payment.paidAt = new Date();
   payment.transactionId = req.body.transactionId || `TXN-${Date.now()}`;
-  payment.paymentMethod = req.body.paymentMethod || 'online';
+  payment.paymentMethod = req.body.paymentMethod || "online";
   await payment.save();
 
   res.json({
     success: true,
     data: payment,
-    message: 'Payment recorded. Gateway integration ready via transactionId.',
+    message: "Payment recorded. Gateway integration ready via transactionId.",
   });
-});
+};
 
-export const getPaymentSummary = asyncHandler(async (req: AuthRequest, res: Response) => {
+export const getPaymentSummary = async (req: AuthRequest, res: Response) => {
   const societyId = req.user!.society;
   const [pending, paid, overdue] = await Promise.all([
-    Payment.countDocuments({ society: societyId, status: 'pending' }),
-    Payment.countDocuments({ society: societyId, status: 'paid' }),
-    Payment.countDocuments({ society: societyId, status: 'overdue' }),
+    Payment.countDocuments({ society: societyId, status: "pending" }),
+    Payment.countDocuments({ society: societyId, status: "paid" }),
+    Payment.countDocuments({ society: societyId, status: "overdue" }),
   ]);
 
   const revenue = await Payment.aggregate([
-    { $match: { society: societyId, status: 'paid' } },
-    { $group: { _id: null, total: { $sum: '$amount' } } },
+    { $match: { society: societyId, status: "paid" } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
   ]);
 
   res.json({
@@ -127,4 +131,4 @@ export const getPaymentSummary = asyncHandler(async (req: AuthRequest, res: Resp
       totalRevenue: revenue[0]?.total || 0,
     },
   });
-});
+};

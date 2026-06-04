@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Sidebar } from './Sidebar';
-import { Header } from './Header';
-import { useAppSelector } from '@/store/hooks';
-import { useSocket } from '@/hooks/useSocket';
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { Sidebar } from "./Sidebar";
+import { Header } from "./Header";
+import { useAppSelector } from "@/store/hooks";
+import { useSocket } from "@/hooks/useSocket";
 
 export const DashboardLayout = () => {
   const { user } = useAppSelector((s) => s.auth);
@@ -17,7 +17,10 @@ export const DashboardLayout = () => {
       <Sidebar role={user.role} />
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileOpen(false)}
+          />
           <div className="absolute left-0 top-0 h-full w-64 bg-white dark:bg-gray-900">
             <Sidebar role={user.role} />
           </div>
@@ -25,7 +28,7 @@ export const DashboardLayout = () => {
       )}
       <div className="flex flex-1 flex-col">
         <Header onMenuClick={() => setMobileOpen(true)} />
-        <main className="flex-1 overflow-auto p-4 lg:p-6">
+        <main className="flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>

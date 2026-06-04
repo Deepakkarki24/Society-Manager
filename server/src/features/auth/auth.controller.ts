@@ -84,12 +84,16 @@ export const login = async (req: AuthRequest, res: Response) => {
 };
 
 export const getMe = async (req: AuthRequest, res: Response) => {
-  const user = await User.findById(req.user!._id)
-    .select("-password")
-    .populate("society", "name city address");
-  if (!user) throw new ApiError(404, "User not found");
+  try {
+    const user = await User.findById(req.user?._id)
+      .select("-password")
+      .populate("society", "name city address");
+    if (!user) throw new ApiError(404, "User not found");
 
-  res.json({ success: true, data: user });
+    res.json({ success: true, data: user });
+  } catch (err: any) {
+    console.log(err);
+  }
 };
 
 export const updateProfile = async (req: AuthRequest, res: Response) => {
