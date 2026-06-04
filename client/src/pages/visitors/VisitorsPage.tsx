@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import api from '@/services/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -9,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { useAppSelector } from '@/store/hooks';
 import type { Visitor } from '@/types';
 import toast from 'react-hot-toast';
+import api from '@/api-manager/apiInterceptor';
 
 export const VisitorsPage = () => {
   const { user } = useAppSelector((s) => s.auth);

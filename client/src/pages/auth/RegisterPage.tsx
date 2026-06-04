@@ -6,9 +6,9 @@ import { register as registerUser } from "@/store/slices/authSlice";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
-import api from "@/services/api";
 import toast from "react-hot-toast";
 import type { Society } from "@/types";
+import api from "@/api-manager/apiInterceptor";
 
 interface RegisterForm {
   name: string;
