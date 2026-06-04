@@ -5,10 +5,10 @@ import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
-import api from "@/services/api";
 import toast from "react-hot-toast";
 import type { FamilyMember } from "@/types";
 import { useEffect, useState } from "react";
+import api from "@/api-manager/apiInterceptor";
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();

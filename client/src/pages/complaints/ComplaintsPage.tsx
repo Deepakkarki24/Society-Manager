@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
-import api from '@/services/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -24,10 +23,10 @@ export const ComplaintsPage = () => {
 
   const fetchComplaints = () => {
     setLoading(true);
-    api
-      .get('/complaints', { params: { search, status, category, limit: 50 } })
-      .then(({ data }) => setComplaints(data.data || []))
-      .finally(() => setLoading(false));
+    // api
+    //   .get('/complaints', { params: { search, status, category, limit: 50 } })
+    //   .then(({ data }) => setComplaints(data.data || []))
+    //   .finally(() => setLoading(false));
   };
 
   useEffect(() => {

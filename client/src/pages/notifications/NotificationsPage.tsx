@@ -3,9 +3,9 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchNotifications, markRead } from '@/store/slices/notificationSlice';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import api from '@/services/api';
 import { Bell } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
+import api from '@/api-manager/apiInterceptor';
 
 export const NotificationsPage = () => {
   const dispatch = useAppDispatch();

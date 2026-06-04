@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '@/services/api';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +9,7 @@ import { CardSkeleton } from '@/components/ui/Skeleton';
 import { useAppSelector } from '@/store/hooks';
 import type { Complaint, User } from '@/types';
 import toast from 'react-hot-toast';
+import api from '@/api-manager/apiInterceptor';
 
 export const ComplaintDetailPage = () => {
   const { id } = useParams();

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import api from '@/services/api';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -7,6 +6,7 @@ import { useAppSelector } from '@/store/hooks';
 import type { Payment } from '@/types';
 import { MONTHS } from '@/constants';
 import toast from 'react-hot-toast';
+import api from '@/api-manager/apiInterceptor';
 
 export const PaymentsPage = () => {
   const { user } = useAppSelector((s) => s.auth);

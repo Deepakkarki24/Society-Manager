@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import api from '@/services/api';
 import { Card } from '@/components/ui/Card';
 import { CardSkeleton } from '@/components/ui/Skeleton';
 import { useAppSelector } from '@/store/hooks';
 import type { DashboardAnalytics } from '@/types';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { MessageSquareWarning, CheckCircle, Clock, Users } from 'lucide-react';
+import { getDashboardAnalytics, getPlatformAnalytics } from '@/api-manager/requestHandler';
 
 export const AnalyticsPage = () => {
   const { user } = useAppSelector((s) => s.auth);
@@ -16,12 +16,41 @@ export const AnalyticsPage = () => {
   const [dashboard, setDashboard] = useState<DashboardAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user?.role === 'super_admin') {
-      api.get('/analytics/platform').then(({ data }) => setPlatform(data.data)).finally(() => setLoading(false));
-    } else {
-      api.get('/analytics/dashboard').then(({ data }) => setDashboard(data.data)).finally(() => setLoading(false));
+  const getPlatformAnalyticsData = async () => {
+    try {
+      const res = await getPlatformAnalytics()
+      // setPlatform(res.data?)
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
     }
+
+  }
+
+  const getDashboardAnalyticsData = async () => {
+    try {
+      const res = await getDashboardAnalytics()
+      // setPlatform(res.data?)
+      console.log(res)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+
+  }
+
+
+  useEffect(() => {
+    // if (user?.role === 'super_admin') {
+    //   // api.get('/analytics/platform').then(({ data }) => setPlatform(data.data)).finally(() => setLoading(false));
+    // } else {
+    //   api.get('/analytics/dashboard').then(({ data }) => setDashboard(data.data)).finally(() => setLoading(false));
+    // }
+
+    user?.role === 'super_admin' ? getPlatformAnalyticsData() : getDashboardAnalyticsData()
   }, [user?.role]);
 
   if (loading) return <CardSkeleton />;

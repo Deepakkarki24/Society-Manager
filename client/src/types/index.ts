@@ -1,25 +1,25 @@
 export type UserRole =
-  | 'super_admin'
-  | 'society_admin'
-  | 'resident'
-  | 'maintenance_staff';
+  | "super_admin"
+  | "society_admin"
+  | "resident"
+  | "maintenance_staff";
 
 export type ComplaintStatus =
-  | 'pending'
-  | 'assigned'
-  | 'in_progress'
-  | 'resolved'
-  | 'reopened';
+  | "pending"
+  | "assigned"
+  | "in_progress"
+  | "resolved"
+  | "reopened";
 
 export type ComplaintCategory =
-  | 'water'
-  | 'electricity'
-  | 'security'
-  | 'lift'
-  | 'parking'
-  | 'cleaning'
-  | 'maintenance'
-  | 'other';
+  | "water"
+  | "electricity"
+  | "security"
+  | "lift"
+  | "parking"
+  | "cleaning"
+  | "maintenance"
+  | "other";
 
 export interface User {
   _id: string;
@@ -155,7 +155,11 @@ export interface DashboardAnalytics {
     resolutionRate: number;
   };
   categoryStats: { _id: string; count: number }[];
-  monthlyTrends: { _id: { year: number; month: number }; count: number; resolved: number }[];
+  monthlyTrends: {
+    _id: { year: number; month: number };
+    count: number;
+    resolved: number;
+  }[];
   residents: { total: number };
   societies: { total: number };
   payments: { _id: string; count: number; amount: number }[];
