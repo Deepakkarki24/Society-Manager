@@ -36,15 +36,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuditLog = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const auditLogSchema = new mongoose_1.Schema({
-    user: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
     action: { type: String, required: true },
     entity: { type: String, required: true },
     entityId: mongoose_1.Schema.Types.ObjectId,
-    society: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Society' },
+    society: { type: mongoose_1.Schema.Types.ObjectId, ref: "Society" },
     details: mongoose_1.Schema.Types.Mixed,
     ip: String,
 }, { timestamps: { createdAt: true, updatedAt: false } });
 auditLogSchema.index({ society: 1, createdAt: -1 });
 auditLogSchema.index({ user: 1, createdAt: -1 });
-exports.AuditLog = mongoose_1.default.model('AuditLog', auditLogSchema);
+exports.AuditLog = mongoose_1.default.model("AuditLog", auditLogSchema);
 //# sourceMappingURL=AuditLog.js.map

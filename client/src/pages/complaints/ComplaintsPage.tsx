@@ -12,6 +12,7 @@ import { MessageSquareWarning } from 'lucide-react';
 import { useAppSelector } from '@/store/hooks';
 import type { Complaint } from '@/types';
 import { COMPLAINT_CATEGORIES } from '@/constants';
+import api from '@/api-manager/apiInterceptor';
 
 export const ComplaintsPage = () => {
   const { user } = useAppSelector((s) => s.auth);
@@ -23,10 +24,10 @@ export const ComplaintsPage = () => {
 
   const fetchComplaints = () => {
     setLoading(true);
-    // api
-    //   .get('/complaints', { params: { search, status, category, limit: 50 } })
-    //   .then(({ data }) => setComplaints(data.data || []))
-    //   .finally(() => setLoading(false));
+    api
+      .get('/complaints', { params: { search, status, category, limit: 50 } })
+      .then(({ data }) => setComplaints(data.data || []))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

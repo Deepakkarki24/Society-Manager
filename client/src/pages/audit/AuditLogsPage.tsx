@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/Card';
+import api from '@/api-manager/apiInterceptor';
 
 interface AuditLog {
   _id: string;
@@ -13,7 +14,7 @@ export const AuditLogsPage = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
 
   useEffect(() => {
-    // api.get('/audit-logs').then(({ data }) => setLogs(data.data || []));
+    api.get('/audit-logs').then(({ data }) => setLogs(data.data || []));
   }, []);
 
   return (

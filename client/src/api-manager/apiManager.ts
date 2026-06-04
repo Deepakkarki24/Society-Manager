@@ -1,5 +1,5 @@
 
-import END_POINTS from "./endpoint";
+import END_POINTS from "./endPoints";
 import MakeRequest from "./makeRequest";
 
 class ApiManager {

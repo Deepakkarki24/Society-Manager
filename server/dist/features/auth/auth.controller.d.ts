@@ -1,6 +1,8 @@
-export declare const register: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const login: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const getMe: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const updateProfile: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
-export declare const changePassword: import("express").RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
+import { Response } from "express";
+import { AuthRequest } from "../../middleware/auth";
+export declare const register: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const login: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getMe: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const updateProfile: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const changePassword: (req: AuthRequest, res: Response) => Promise<void>;
 //# sourceMappingURL=auth.controller.d.ts.map
