@@ -45,12 +45,6 @@ export const AnalyticsPage = () => {
 
 
   useEffect(() => {
-    // if (user?.role === 'super_admin') {
-    //   // api.get('/analytics/platform').then(({ data }) => setPlatform(data.data)).finally(() => setLoading(false));
-    // } else {
-    //   api.get('/analytics/dashboard').then(({ data }) => setDashboard(data.data)).finally(() => setLoading(false));
-    // }
-
     user?.role === 'super_admin' ? getPlatformAnalyticsData() : getDashboardAnalyticsData()
   }, [user?.role]);
 

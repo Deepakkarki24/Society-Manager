@@ -18,7 +18,7 @@ const initialState: NotificationState = {
 export const fetchNotifications = createAsyncThunk(
   'notifications/fetch',
   async () => {
-    const { data } = await api.get('/notifications', { params: { limit: 20 } });
+    const { data } = await api.get('/api/notifications', { params: { limit: 20 } });
     return data.data as Notification[];
   }
 );
@@ -26,7 +26,7 @@ export const fetchNotifications = createAsyncThunk(
 export const fetchUnreadCount = createAsyncThunk(
   'notifications/unreadCount',
   async () => {
-    const { data } = await api.get('/notifications/unread-count');
+    const { data } = await api.get('/api/notifications/unread-count');
     return data.data.count as number;
   }
 );

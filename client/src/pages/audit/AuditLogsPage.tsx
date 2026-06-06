@@ -14,7 +14,7 @@ export const AuditLogsPage = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
 
   useEffect(() => {
-    api.get('/audit-logs').then(({ data }) => setLogs(data.data || []));
+    api.get('/api/audit-logs').then(({ data }) => setLogs(data.data || []));
   }, []);
 
   return (

@@ -16,12 +16,12 @@ export const NotificationsPage = () => {
   }, [dispatch]);
 
   const markAllRead = async () => {
-    await api.patch('/notifications/read-all');
+    await api.patch('/api/notifications/read-all');
     dispatch(fetchNotifications());
   };
 
   const handleRead = (id: string) => {
-    api.patch(`/notifications/${id}/read`);
+    api.patch(`/api/notifications/${id}/read`);
     dispatch(markRead(id));
   };
 

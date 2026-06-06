@@ -5,17 +5,14 @@ import api from "@/api-manager/apiInterceptor";
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const storedUser = localStorage.getItem("user");
-const storedToken = localStorage.getItem("token");
 
 const initialState: AuthState = {
   user: storedUser ? JSON.parse(storedUser) : null,
-  token: storedToken,
   loading: false,
   error: null,
 };
@@ -27,7 +24,7 @@ export const login = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const { data } = await api.post("/auth/login", credentials);
+      const { data } = await api.post("/api/auth/login", credentials);
       console.log(data);
       return data.data;
     } catch (err: unknown) {
@@ -53,7 +50,7 @@ export const register = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const { data } = await api.post("/auth/register", payload);
+      const { data } = await api.post("/api/auth/register", payload);
       return data.data;
     } catch (err: unknown) {
       const message =
@@ -68,7 +65,7 @@ export const fetchMe = createAsyncThunk(
   "auth/fetchMe",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await api.get("/auth/me");
+      const { data } = await api.get("/api/auth/me");
       return data.data;
     } catch {
       return rejectWithValue("Session expired");
@@ -82,8 +79,6 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
-      localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
     setUser: (state, action: PayloadAction<User>) => {
@@ -98,8 +93,6 @@ const authSlice = createSlice({
     ) => {
       state.loading = false;
       state.user = action.payload.user;
-      state.token = action.payload.token;
-      localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload.user));
     };
 

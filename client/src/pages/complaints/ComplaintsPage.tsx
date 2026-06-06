@@ -25,7 +25,7 @@ export const ComplaintsPage = () => {
   const fetchComplaints = () => {
     setLoading(true);
     api
-      .get('/complaints', { params: { search, status, category, limit: 50 } })
+      .get('/api/complaints', { params: { search, status, category, limit: 50 } })
       .then(({ data }) => setComplaints(data.data || []))
       .finally(() => setLoading(false));
   };

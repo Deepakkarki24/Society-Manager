@@ -67,13 +67,18 @@ userSchema.index({ society: 1, role: 1 });
 // userSchema.index({ email: 1 });
 
 userSchema.pre("save", async function (next) {
+
   if (!this.isModified("password")) return next();
+  
   this.password = await bcrypt.hash(this.password, 12);
+  
   next();
 });
 
 userSchema.methods.comparePassword = async function (candidate: string) {
+  
   return bcrypt.compare(candidate, this.password);
+
 };
 
 export const User = mongoose.model<IUser>("User", userSchema);

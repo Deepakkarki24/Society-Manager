@@ -13,11 +13,11 @@ export const SocietiesPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const load = () => api.get('/societies').then(({ data }) => setSocieties(data.data || []));
+  const load = () => api.get('/api/societies').then(({ data }) => setSocieties(data.data || []));
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, unknown>) => {
-    await api.post('/societies', { ...data, totalFlats: Number(data.totalFlats), maintenanceAmount: Number(data.maintenanceAmount || 0) });
+    await api.post('/api/societies', { ...data, totalFlats: Number(data.totalFlats), maintenanceAmount: Number(data.maintenanceAmount || 0) });
     toast.success('Society created');
     setModalOpen(false);
     reset();

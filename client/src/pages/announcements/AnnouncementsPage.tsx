@@ -20,13 +20,13 @@ export const AnnouncementsPage = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const load = () => {
-    api.get('/announcements').then(({ data }) => setItems(data.data || []));
+    api.get('/api/announcements').then(({ data }) => setItems(data.data || []));
   };
 
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, unknown>) => {
-    await api.post('/announcements', data);
+    await api.post('/api/announcements', data);
     toast.success('Announcement created');
     setModalOpen(false);
     reset();

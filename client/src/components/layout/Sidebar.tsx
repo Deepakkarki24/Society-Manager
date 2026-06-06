@@ -15,22 +15,23 @@ import type { UserRole } from '@/types';
 
 interface NavItem {
   to: string;
+  type: string;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   roles: UserRole[];
 }
 
 const navItems: NavItem[] = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
-  { to: '/societies', icon: Building2, label: 'Societies', roles: ['super_admin'] },
-  { to: '/users', icon: Users, label: 'Users', roles: ['super_admin', 'society_admin'] },
-  { to: '/complaints', icon: MessageSquareWarning, label: 'Complaints', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
-  { to: '/announcements', icon: Megaphone, label: 'Announcements', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
-  { to: '/visitors', icon: UserCheck, label: 'Visitors', roles: ['society_admin', 'resident'] },
-  { to: '/payments', icon: CreditCard, label: 'Payments', roles: ['society_admin', 'resident'] },
-  { to: '/analytics', icon: BarChart3, label: 'Analytics', roles: ['super_admin', 'society_admin'] },
-  { to: '/audit-logs', icon: ClipboardList, label: 'Audit Logs', roles: ['super_admin', 'society_admin'] },
-  { to: '/settings', icon: Settings, label: 'Settings', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
+  { to: '/dashboard', type: "dashboard", icon: LayoutDashboard, label: 'Dashboard', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
+  { to: '/societies', type: "societies", icon: Building2, label: 'Societies', roles: ['super_admin'] },
+  { to: '/users', type: "users", icon: Users, label: 'Users', roles: ['super_admin', 'society_admin'] },
+  { to: '/complaints', type: "complaints", icon: MessageSquareWarning, label: 'Complaints', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
+  { to: '/announcements', type: "announcements", icon: Megaphone, label: 'Announcements', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
+  { to: '/visitors', type: "visitors", icon: UserCheck, label: 'Visitors', roles: ['society_admin', 'resident'] },
+  { to: '/payments', type: "payments", icon: CreditCard, label: 'Payments', roles: ['society_admin', 'resident'] },
+  { to: '/analytics', type: "analytics", icon: BarChart3, label: 'Analytics', roles: ['super_admin', 'society_admin'] },
+  { to: '/audit-logs', type: "audit-logs", icon: ClipboardList, label: 'Audit Logs', roles: ['super_admin', 'society_admin'] },
+  { to: '/settings', type: "settings", icon: Settings, label: 'Settings', roles: ['super_admin', 'society_admin', 'resident', 'maintenance_staff'] },
 ];
 
 export const Sidebar = ({ role }: { role: UserRole }) => {
@@ -42,21 +43,23 @@ export const Sidebar = ({ role }: { role: UserRole }) => {
         <span className="text-xl font-bold text-primary-600">SIMP</span>
       </div>
       <nav className="space-y-1 p-4">
-        {filtered.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                isActive
-                  ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
-                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-              }`
-            }
-          >
-            <Icon className="h-5 w-5" />
-            {label}
-          </NavLink>
+        {filtered.map(({ to, icon: Icon, label, type }) => (
+          <div className='relative' key={type}>
+            <NavLink
+              to={to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} rounded-lg overflow-hidden px-3 py-2 text-sm font-medium transition ${isActive
+                  ? 'dark:bg-white/15 bg-black/10 backdrop-blur-sm dark:text-primary-400'
+                  : 'text-gray-600 hover:bg-black/10 dark:text-gray-400 dark:hover:bg-white/10'
+                }`
+              }
+            >
+              <Icon className="h-5 w-5" />
+              {label}
+
+            </NavLink>
+            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-blue-500 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
+          </div>
         ))}
       </nav>
     </aside>

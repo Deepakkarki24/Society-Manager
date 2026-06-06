@@ -20,8 +20,8 @@ import { AuditLogsPage } from "@/pages/audit/AuditLogsPage";
 import { useAppSelector } from "@/store/hooks";
 
 const HomeRedirect = () => {
-  const { token } = useAppSelector((s) => s.auth);
-  return <Navigate to={token ? "/dashboard" : "/login"} replace />;
+  const { user } = useAppSelector((s) => s.auth);
+  return <Navigate to={user ? "/dashboard" : "/login"} replace />;
 };
 
 function App() {
