@@ -21,7 +21,7 @@ export const ComplaintDetailPage = () => {
   const [status, setStatus] = useState('');
 
   const load = () => {
-    api.get(`/api/complaints/${id}`).then(({ data }) => setComplaint(data.data));
+    api.get(`/api/complaints/${id}`).then(({ data }) => setComplaint(data.data.data));
   };
 
   useEffect(() => {
@@ -77,11 +77,9 @@ export const ComplaintDetailPage = () => {
 
       <Card title="Details">
         <p className="text-gray-700 dark:text-gray-300">{complaint.description}</p>
-        {complaint.images?.length > 0 && (
+        {complaint.image && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {complaint.images.map((img, i) => (
-              <img key={i} src={img} alt="" className="h-24 rounded-lg object-cover" />
-            ))}
+            <img src={complaint.image} alt="" className="h-24 rounded-lg object-cover" />
           </div>
         )}
       </Card>
@@ -104,37 +102,20 @@ export const ComplaintDetailPage = () => {
 
       {(user?.role === 'society_admin' || user?.role === 'maintenance_staff') &&
         ['assigned', 'in_progress'].includes(complaint.status) && (
-        <Card title="Update Status">
-          <div className="flex gap-2">
-            <Select
-              options={[
-                { value: 'in_progress', label: 'In Progress' },
-                { value: 'resolved', label: 'Resolved' },
-              ]}
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            />
-            <Button onClick={handleStatus} disabled={!status}>Update</Button>
-          </div>
-        </Card>
-      )}
-
-      <Card title="Timeline">
-        <div className="space-y-4">
-          {complaint.timeline?.map((t, i) => (
-            <div key={i} className="flex gap-3 border-l-2 border-primary-200 pl-4 dark:border-primary-800">
-              <div>
-                <Badge status={t.status} />
-                <p className="mt-1 text-sm text-gray-500">
-                  {typeof t.updatedBy === 'object' ? t.updatedBy.name : ''} ·{' '}
-                  {new Date(t.createdAt).toLocaleString()}
-                </p>
-                {t.note && <p className="text-sm">{t.note}</p>}
-              </div>
+          <Card title="Update Status">
+            <div className="flex gap-2">
+              <Select
+                options={[
+                  { value: 'in_progress', label: 'In Progress' },
+                  { value: 'resolved', label: 'Resolved' },
+                ]}
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              />
+              <Button onClick={handleStatus} disabled={!status}>Update</Button>
             </div>
-          ))}
-        </div>
-      </Card>
+          </Card>
+        )}
 
       <Card title="Comments">
         <div className="mb-4 space-y-3">
@@ -145,9 +126,9 @@ export const ComplaintDetailPage = () => {
             </div>
           ))}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col justify-center items-center gap-2">
           <Textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Add a comment..." />
-          <Button onClick={handleComment}>Send</Button>
+          <Button className='w-full' onClick={handleComment}>Send</Button>
         </div>
       </Card>
 

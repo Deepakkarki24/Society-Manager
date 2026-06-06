@@ -1,51 +1,18 @@
 import multer from 'multer';
-import { cloudinary } from '../config/cloudinary';
-import { ApiError } from '../utils/ApiError';
-import { Readable } from 'stream';
 
 const storage = multer.memoryStorage();
 
-export const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new ApiError(400, 'Only image files are allowed') as unknown as null, false);
-    }
-  },
+const upload = multer({
+  storage: multer.memoryStorage(), limits: {
+    fileSize: 20 * 1024 * 1024 //max size 20 mb
+  }
 });
 
-export const uploadToCloudinary = async (
-  buffer: Buffer,
-  folder: string
-): Promise<string> => {
-  const hasCloudinary =
-    process.env.CLOUDINARY_CLOUD_NAME &&
-    process.env.CLOUDINARY_API_KEY &&
-    process.env.CLOUDINARY_API_SECRET;
+export const uploadMultipleImages = upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'image_two', maxCount: 1 },
+]);
 
-  if (!hasCloudinary) {
-    return `data:image/jpeg;base64,${buffer.toString('base64')}`;
-  }
+export const uploadSingleImage = upload.single('image');
 
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      { folder: `simp/${folder}` },
-      (error, result) => {
-        if (error || !result) reject(error || new Error('Upload failed'));
-        else resolve(result!.secure_url);
-      }
-    );
-    Readable.from(buffer).pipe(uploadStream);
-  });
-};
-
-export const uploadMultipleImages = async (
-  files: Express.Multer.File[] | undefined,
-  folder: string
-): Promise<string[]> => {
-  if (!files?.length) return [];
-  return Promise.all(files.map((f) => uploadToCloudinary(f.buffer, folder)));
-};
+export const uploadWithoutImage = upload.none();

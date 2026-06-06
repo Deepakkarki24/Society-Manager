@@ -6,11 +6,10 @@ import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { ComplaintsPage } from "@/pages/complaints/ComplaintsPage";
-import { CreateComplaintPage } from "@/pages/complaints/CreateComplaintPage";
 import { ComplaintDetailPage } from "@/pages/complaints/ComplaintDetailPage";
 import { AnnouncementsPage } from "@/pages/announcements/AnnouncementsPage";
-import { VisitorsPage } from "@/pages/visitors/VisitorsPage";
-import { PaymentsPage } from "@/pages/payments/PaymentsPage";
+// import { VisitorsPage } from "@/pages/visitors/VisitorsPage";
+// import { PaymentsPage } from "@/pages/payments/PaymentsPage";
 import { SocietiesPage } from "@/pages/societies/SocietiesPage";
 import { UsersPage } from "@/pages/users/UsersPage";
 import { SettingsPage } from "@/pages/settings/SettingsPage";
@@ -37,11 +36,10 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/complaints" element={<ComplaintsPage />} />
-            <Route path="/complaints/new" element={<CreateComplaintPage />} />
             <Route path="/complaints/:id" element={<ComplaintDetailPage />} />
             <Route path="/announcements" element={<AnnouncementsPage />} />
-            <Route path="/visitors" element={<VisitorsPage />} />
-            <Route path="/payments" element={<PaymentsPage />} />
+            {/* <Route path="/visitors" element={<VisitorsPage />} />
+            <Route path="/payments" element={<PaymentsPage />} /> */}
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
 

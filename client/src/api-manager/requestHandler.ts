@@ -9,3 +9,8 @@ export const getDashboardAnalytics = async () => {
     const response = await ApiManager.dashboardAnalytics()
     return response;
 }
+
+export const generateComplaint = async (message: string, image: File | null) => {
+    const response = await ApiManager.complaint(message, image)
+    return response
+}

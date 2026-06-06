@@ -1,5 +1,8 @@
 const END_POINTS = {
-    ANALYTICS : {
+    COMPLAINT: {
+        GENERATE: "/api/complaints/create"
+    },
+    ANALYTICS: {
         PLATFROM: "/api/analytics/platform",
         DASHBOARD: "/api/analytics/dashboard"
     }

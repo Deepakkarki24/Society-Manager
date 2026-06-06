@@ -20,15 +20,10 @@ router.use(authenticate);
 
 router.get('/history', authorize('resident'), getComplaintHistory);
 
-router
-  .route('/')
-  .post(
-    authorize('resident'),
-    uploadSingleImage,
-    createComplaint
-  );
+router.post("/create", authorize('resident'), uploadSingleImage, createComplaint);
 
 router.get('/:id', getComplaint);
+router.get('/', getComplaints);
 
 router.patch(
   '/:id/assign',

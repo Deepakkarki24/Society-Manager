@@ -20,7 +20,7 @@ export const AnnouncementsPage = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const load = () => {
-    api.get('/api/announcements').then(({ data }) => setItems(data.data || []));
+    api.get('/api/announcements').then(({ data }) => setItems(data.data.data || []));
   };
 
   useEffect(() => { load(); }, []);

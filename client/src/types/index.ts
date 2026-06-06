@@ -64,10 +64,9 @@ export interface Complaint {
   society: string;
   createdBy: User | string;
   assignedTo?: User | string;
-  images: string[];
+  image: string;
   completionProof: string[];
   comments: ComplaintComment[];
-  timeline: ComplaintTimeline[];
   createdAt: string;
   updatedAt: string;
 }
@@ -76,13 +75,6 @@ export interface ComplaintComment {
   _id?: string;
   user: User;
   text: string;
-  createdAt: string;
-}
-
-export interface ComplaintTimeline {
-  status: ComplaintStatus;
-  note?: string;
-  updatedBy: User;
   createdAt: string;
 }
 

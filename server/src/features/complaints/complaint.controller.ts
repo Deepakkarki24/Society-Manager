@@ -8,6 +8,7 @@ import { createNotification } from "../../services/notification.service";
 import mongoose from "mongoose";
 import { ComplaintStatus } from "../../types";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
+import { generateModelResponse } from "../../runner";
 
 const buildComplaintFilter = (req: AuthRequest): Record<string, unknown> => {
   const filter: Record<string, unknown> = {};
@@ -37,63 +38,59 @@ const buildComplaintFilter = (req: AuthRequest): Record<string, unknown> => {
   return filter;
 };
 
-const addTimeline = (status: ComplaintStatus, userId: string, note?: string) => ({
-  status,
-  note,
-  updatedBy: new mongoose.Types.ObjectId(userId),
-  createdAt: new Date(),
-});
-
 export const createComplaint = async (req: AuthRequest, res: Response) => {
   try {
 
-    // const images = await uploadMultipleImages(
-    //   req.files as Express.Multer.File[],
-    //   "complaints",
-    // );
-
-    const image = req.files
+    const image = req.file
     const { message } = req.body
-
-    const societyId = req.user!.society;
+    const societyId = req.user?.society;
 
     if (!societyId) return errorResponse(res, 400, "Resident must belong to a society");
 
-    console.log("message", message)
-    console.log("image", image)
+    const modelResponse = await generateModelResponse(message)
 
-    // const complaint = await Complaint.create({
-    //   ...req.body,
-    //   society: societyId,
-    //   createdBy: req.user!._id,
-    //   images,
-    //   timeline: [addTimeline("pending", req.user!._id, "Complaint created")],
-    // });
+    const { title, description, priority, category } = modelResponse.data
 
-    // const populated = await Complaint.findById(complaint._id)
-    //   .populate("createdBy", "name email flatNumber")
-    //   .populate("society", "name");
+    let imageBase64
+    if (image) {
+      imageBase64 = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+    }
 
-    // const admins = await User.find({
-    //   society: societyId,
-    //   role: "society_admin",
-    //   isActive: true,
-    // });
+    const complaint = await Complaint.create({
+      title,
+      description,
+      category,
+      priority,
+      society: societyId,
+      createdBy: req.user!._id,
+      image: imageBase64
+    });
 
-    // await Promise.all(
-    //   admins.map((admin) =>
-    //     createNotification({
-    //       recipientId: admin._id.toString(),
-    //       title: "New Complaint",
-    //       message: `New complaint: ${complaint.title}`,
-    //       type: "complaint",
-    //       link: `/complaints/${complaint._id}`,
-    //     }),
-    //   ),
-    // );
+    const populated = await Complaint.findById(complaint._id)
+      .populate("createdBy", "name email flatNumber")
+      .populate("society", "name");
 
-    // await createAuditLog(req, "create", "Complaint", complaint._id.toString());
-    // res.status(201).json({ success: true, data: populated });
+    const admins = await User.find({
+      society: societyId,
+      role: "society_admin",
+      isActive: true,
+    });
+
+    await Promise.all(
+      admins.map((admin) =>
+        createNotification({
+          recipientId: admin._id.toString(),
+          title: "New Complaint",
+          message: `New complaint: ${complaint.title}`,
+          type: "complaint",
+          link: `/complaints/${complaint._id}`,
+        }),
+      ),
+    );
+
+    await createAuditLog(req, "create", "Complaint", complaint._id.toString());
+
+    return successResponse(res, 201, "Complaint generated!", { data: populated });
   } catch (err: any) {
     return errorResponse(res, 500, err.message)
   }
@@ -129,7 +126,6 @@ export const getComplaint = async (req: AuthRequest, res: Response) => {
       .populate("createdBy", "name email flatNumber block phone")
       .populate("assignedTo", "name email phone")
       .populate("comments.user", "name role avatar")
-      .populate("timeline.updatedBy", "name role");
 
     if (!complaint) return errorResponse(res, 404, "Complaint not found");
 
@@ -143,6 +139,7 @@ export const getComplaint = async (req: AuthRequest, res: Response) => {
     return successResponse(res, 200, "Fetched complaints!", { data: complaint });
 
   } catch (err: any) {
+    console.log(err.message)
     return errorResponse(res, 500, err.message)
   }
 };
@@ -156,7 +153,6 @@ export const assignComplaint = async (req: AuthRequest, res: Response) => {
 
     complaint.assignedTo = assignedTo;
     complaint.status = "assigned";
-    complaint.timeline.push(addTimeline("assigned", req.user!._id, note));
     await complaint.save();
 
     await createNotification({
@@ -191,7 +187,6 @@ export const updateComplaintStatus = async (req: AuthRequest, res: Response,) =>
     }
 
     complaint.status = status;
-    complaint.timeline.push(addTimeline(status, req.user!._id, note));
 
     // if (status === "resolved") {
     //   complaint.resolvedAt = new Date();
@@ -228,13 +223,7 @@ export const reopenComplaint = async (req: AuthRequest, res: Response) => {
 
     complaint.status = "reopened";
     complaint.resolvedAt = undefined;
-    complaint.timeline.push(
-      addTimeline(
-        "reopened",
-        req.user!._id,
-        req.body.note || "Complaint reopened",
-      ),
-    );
+
     await complaint.save();
 
     return successResponse(res, 200, "Reopend complaint!", { data: complaint });

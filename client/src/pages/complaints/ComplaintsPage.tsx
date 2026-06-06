@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { TableSkeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { MessageSquareWarning } from 'lucide-react';
-import { useAppSelector } from '@/store/hooks';
 import type { Complaint } from '@/types';
 import { COMPLAINT_CATEGORIES } from '@/constants';
 import api from '@/api-manager/apiInterceptor';
 
 export const ComplaintsPage = () => {
-  const { user } = useAppSelector((s) => s.auth);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -26,7 +23,7 @@ export const ComplaintsPage = () => {
     setLoading(true);
     api
       .get('/api/complaints', { params: { search, status, category, limit: 50 } })
-      .then(({ data }) => setComplaints(data.data || []))
+      .then(({ data }) => setComplaints(data.data.data || []))
       .finally(() => setLoading(false));
   };
 
@@ -38,14 +35,6 @@ export const ComplaintsPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold dark:text-white">Complaints</h1>
-        {user?.role === 'resident' && (
-          <Link to="/complaints/new">
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              New Complaint
-            </Button>
-          </Link>
-        )}
       </div>
 
       <Card>
@@ -99,7 +88,7 @@ export const ComplaintsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {complaints.map((c) => (
+                {complaints && complaints.map((c) => (
                   <tr
                     key={c._id}
                     className="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"

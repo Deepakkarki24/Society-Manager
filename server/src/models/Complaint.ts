@@ -11,13 +11,6 @@ export interface IComplaintComment {
   createdAt: Date;
 }
 
-export interface IComplaintTimeline {
-  status: ComplaintStatus;
-  note?: string;
-  updatedBy: mongoose.Types.ObjectId;
-  createdAt: Date;
-}
-
 export interface IComplaint extends Document {
   title: string;
   description: string;
@@ -27,10 +20,9 @@ export interface IComplaint extends Document {
   society: mongoose.Types.ObjectId;
   createdBy: mongoose.Types.ObjectId;
   assignedTo?: mongoose.Types.ObjectId;
-  images: string[];
+  image: string;
   completionProof: string[];
   comments: IComplaintComment[];
-  timeline: IComplaintTimeline[];
   resolvedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -40,20 +32,6 @@ const commentSchema = new Schema<IComplaintComment>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-  },
-  { _id: true }
-);
-
-const timelineSchema = new Schema<IComplaintTimeline>(
-  {
-    status: {
-      type: String,
-      enum: ['pending', 'assigned', 'in_progress', 'resolved', 'reopened'],
-      required: true,
-    },
-    note: String,
-    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now },
   },
   { _id: true }
@@ -90,10 +68,9 @@ const complaintSchema = new Schema<IComplaint>(
     society: { type: Schema.Types.ObjectId, ref: 'Society', required: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
-    images: [String],
+    image: String,
     completionProof: [String],
     comments: [commentSchema],
-    timeline: [timelineSchema],
     resolvedAt: Date,
   },
   { timestamps: true }
