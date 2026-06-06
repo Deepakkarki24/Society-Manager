@@ -2,11 +2,8 @@ import { Response } from "express";
 import { Complaint, User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
-import { uploadMultipleImages } from "../../middleware/upload";
 import { createAuditLog } from "../../services/audit.service";
 import { createNotification } from "../../services/notification.service";
-import mongoose from "mongoose";
-import { ComplaintStatus } from "../../types";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
 import { generateModelResponse } from "../../runner";
 
