@@ -7,9 +7,12 @@ import routes from "./routes";
 import { errorHandler, notFound } from "./middleware/errorHandler";
 import { configureCloudinary } from "./config/cloudinary";
 import { CLIENT_URL } from "./config/env";
+import cookieParser from "cookie-parser";
 
 export const createApp = () => {
   const app = express();
+
+  app.use(cookieParser());
 
   configureCloudinary();
 

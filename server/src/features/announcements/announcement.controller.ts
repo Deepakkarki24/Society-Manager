@@ -1,91 +1,154 @@
 import { Response } from "express";
 import { Announcement, User } from "../../models";
-import { ApiError } from "../../utils/ApiError";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { createNotification } from "../../services/notification.service";
+import { errorResponse, successResponse } from "../../utils/ApiResponse";
 
 export const createAnnouncement = async (req: AuthRequest, res: Response) => {
-  const societyId = req.user!.society;
-  if (!societyId) throw new ApiError(400, "Society context required");
+  try {
+    const societyId = req.user!.society
+    if (!societyId) {
+      return errorResponse(res, 400, "Society context required");
+    }
 
-  const announcement = await Announcement.create({
-    ...req.body,
-    society: societyId,
-    createdBy: req.user!._id,
-  });
+    const announcement = await Announcement.create({
+      ...req.body,
+      society: societyId,
+      createdBy: req.user!._id,
+    });
 
-  const residents = await User.find({
-    society: societyId,
-    role: "resident",
-    isActive: true,
-  });
+    const residents = await User.find({
+      society: societyId,
+      role: "resident",
+      isActive: true,
+    });
 
-  await Promise.all(
-    residents.map((r) =>
-      createNotification({
-        recipientId: r._id.toString(),
-        title: req.body.isImportant ? "Important Notice" : "New Announcement",
-        message: announcement.title,
-        type: "announcement",
-        link: `/announcements/${announcement._id}`,
-      }),
-    ),
-  );
+    await Promise.all(
+      residents.map((r) =>
+        createNotification({
+          recipientId: r._id.toString(),
+          title: req.body.isImportant
+            ? "Important Notice"
+            : "New Announcement",
+          message: announcement.title,
+          type: "announcement",
+          link: `/announcements/${announcement._id}`,
+        }),
+      ),
+    );
 
-  res.status(201).json({ success: true, data: announcement });
+    return successResponse(res, 201, "Announcement created successfully", announcement);
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message);
+  }
 };
 
 export const getAnnouncements = async (req: AuthRequest, res: Response) => {
-  const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
-  const societyId =
-    req.user!.role === "super_admin"
-      ? (req.query.societyId as string)
-      : req.user!.society;
+  try {
+    const { page, limit, skip } = getPagination(
+      req.query.page,
+      req.query.limit,
+    );
 
-  const filter: Record<string, unknown> = {};
-  if (societyId) filter.society = societyId;
-  if (req.query.important === "true") filter.isImportant = true;
-  if (req.query.events === "true") filter.isEvent = true;
+    const societyId =
+      req.user!.role === "super_admin"
+        ? (req.query.societyId as string)
+        : req.user!.society;
 
-  const [announcements, total] = await Promise.all([
-    Announcement.find(filter)
-      .populate("createdBy", "name")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit),
-    Announcement.countDocuments(filter),
-  ]);
+    const filter: Record<string, unknown> = {};
 
-  res.json({
-    success: true,
-    ...paginatedResponse(announcements, total, page, limit),
-  });
+    if (societyId) filter.society = societyId;
+    if (req.query.important === "true") filter.isImportant = true;
+    if (req.query.events === "true") filter.isEvent = true;
+
+    const [announcements, total] = await Promise.all([
+      Announcement.find(filter)
+        .populate("createdBy", "name")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Announcement.countDocuments(filter),
+    ]);
+
+    return successResponse(res, 200, "Announcements fetched successfully", paginatedResponse(announcements, total, page, limit));
+  
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message);
+  }
 };
 
-export const getAnnouncement = async (req: AuthRequest, res: Response) => {
-  const announcement = await Announcement.findById(req.params.id).populate(
-    "createdBy",
-    "name role",
-  );
-  if (!announcement) throw new ApiError(404, "Announcement not found");
-  res.json({ success: true, data: announcement });
+export const getAnnouncement = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const announcement = await Announcement.findById(
+      req.params.id,
+    ).populate("createdBy", "name role");
+
+    if (!announcement) {
+      return errorResponse(res, 404, "Announcement not found");
+    }
+
+    return successResponse(
+      res,
+      200,
+      "Announcement fetched successfully",
+      announcement,
+    );
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message);
+  }
 };
 
-export const updateAnnouncement = async (req: AuthRequest, res: Response) => {
-  const announcement = await Announcement.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-    },
-  );
-  if (!announcement) throw new ApiError(404, "Announcement not found");
-  res.json({ success: true, data: announcement });
+export const updateAnnouncement = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const announcement = await Announcement.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true },
+    );
+
+    if (!announcement) {
+      return errorResponse(res, 404, "Announcement not found");
+    }
+
+    return successResponse(
+      res,
+      200,
+      "Announcement updated successfully",
+      announcement,
+    );
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message);
+  }
 };
 
-export const deleteAnnouncement = async (req: AuthRequest, res: Response) => {
-  const announcement = await Announcement.findByIdAndDelete(req.params.id);
-  if (!announcement) throw new ApiError(404, "Announcement not found");
-  res.json({ success: true, message: "Announcement deleted" });
+export const deleteAnnouncement = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const announcement = await Announcement.findByIdAndDelete(
+      req.params.id,
+    );
+
+    if (!announcement) {
+      return errorResponse(res, 404, "Announcement not found");
+    }
+
+    return successResponse(
+      res,
+      200,
+      "Announcement deleted successfully",
+    );
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message);
+  }
 };

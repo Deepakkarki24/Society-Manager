@@ -1,37 +1,76 @@
 import { Response } from "express";
 import { Feedback } from "../../models";
-import { ApiError } from "../../utils/ApiError";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
+import { errorResponse, successResponse } from "../../utils/ApiResponse";
 
-export const submitFeedback = async (req: AuthRequest, res: Response) => {
-  const societyId = req.user!.society;
-  if (!societyId) throw new ApiError(400, "Society context required");
+export const submitFeedback = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const societyId = req.user!.society;
 
-  const feedback = await Feedback.create({
-    ...req.body,
-    society: societyId,
-    submittedBy: req.user!._id,
-  });
+    if (!societyId) {
+      return errorResponse(res, 400, "Society context required");
+    }
 
-  res.status(201).json({ success: true, data: feedback });
+    const feedback = await Feedback.create({
+      ...req.body,
+      society: societyId,
+      submittedBy: req.user!._id,
+    });
+
+    return successResponse(
+      res,
+      201,
+      "Feedback submitted successfully",
+      feedback,
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to submit feedback",
+    );
+  }
 };
 
-export const getFeedback = async (req: AuthRequest, res: Response) => {
-  const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
-  const filter = { society: req.user!.society };
+export const getFeedback = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const { page, limit, skip } = getPagination(
+      req.query.page,
+      req.query.limit,
+    );
 
-  const [feedback, total] = await Promise.all([
-    Feedback.find(filter)
-      .populate("submittedBy", "name flatNumber")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit),
-    Feedback.countDocuments(filter),
-  ]);
+    const filter = {
+      society: req.user!.society,
+    };
 
-  res.json({
-    success: true,
-    ...paginatedResponse(feedback, total, page, limit),
-  });
+    const [feedback, total] = await Promise.all([
+      Feedback.find(filter)
+        .populate("submittedBy", "name flatNumber")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Feedback.countDocuments(filter),
+    ]);
+
+    return successResponse(
+      res,
+      200,
+      "Feedback fetched successfully",
+      paginatedResponse(feedback, total, page, limit),
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to fetch feedback",
+    );
+  }
 };

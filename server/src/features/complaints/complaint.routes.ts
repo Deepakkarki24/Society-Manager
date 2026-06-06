@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { authenticate, authorize } from '../../middleware/auth';
 import { body } from 'express-validator';
 import { validate } from '../../middleware/validate';
-import { upload } from '../../middleware/upload';
 import {
   createComplaint,
   getComplaints,
@@ -13,6 +12,7 @@ import {
   addComment,
   getComplaintHistory,
 } from './complaint.controller';
+import { uploadMultipleImages, uploadSingleImage } from '../../middleware/upload';
 
 const router = Router();
 
@@ -22,25 +22,9 @@ router.get('/history', authorize('resident'), getComplaintHistory);
 
 router
   .route('/')
-  .get(getComplaints)
   .post(
     authorize('resident'),
-    upload.array('images', 5),
-    validate([
-      body('title').notEmpty(),
-      body('description').notEmpty(),
-      body('category').isIn([
-        'water',
-        'electricity',
-        'security',
-        'lift',
-        'parking',
-        'cleaning',
-        'maintenance',
-        'other',
-      ]),
-      body('priority').optional().isIn(['low', 'medium', 'high', 'urgent']),
-    ]),
+    uploadSingleImage,
     createComplaint
   );
 
@@ -56,7 +40,7 @@ router.patch(
 router.patch(
   '/:id/status',
   authorize('society_admin', 'maintenance_staff'),
-  upload.array('completionProof', 5),
+  uploadMultipleImages,
   validate([body('status').isIn(['assigned', 'in_progress', 'resolved'])]),
   updateComplaintStatus
 );

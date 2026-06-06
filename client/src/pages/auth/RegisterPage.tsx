@@ -32,7 +32,7 @@ export const RegisterPage = () => {
 
   useEffect(() => {
     api
-      .get("/societies/public")
+      .get("/api/societies/public")
       .then(({ data }) => {
         setSocieties(data.data || []);
       })

@@ -1,6 +1,5 @@
 import { Response } from "express";
 import { Complaint, User } from "../../models";
-import { ApiError } from "../../utils/ApiError";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { uploadMultipleImages } from "../../middleware/upload";
@@ -8,6 +7,7 @@ import { createAuditLog } from "../../services/audit.service";
 import { createNotification } from "../../services/notification.service";
 import mongoose from "mongoose";
 import { ComplaintStatus } from "../../types";
+import { errorResponse, successResponse } from "../../utils/ApiResponse";
 
 const buildComplaintFilter = (req: AuthRequest): Record<string, unknown> => {
   const filter: Record<string, unknown> = {};
@@ -37,11 +37,7 @@ const buildComplaintFilter = (req: AuthRequest): Record<string, unknown> => {
   return filter;
 };
 
-const addTimeline = (
-  status: ComplaintStatus,
-  userId: string,
-  note?: string,
-) => ({
+const addTimeline = (status: ComplaintStatus, userId: string, note?: string) => ({
   status,
   note,
   updatedBy: new mongoose.Types.ObjectId(userId),
@@ -49,200 +45,252 @@ const addTimeline = (
 });
 
 export const createComplaint = async (req: AuthRequest, res: Response) => {
-  const images = await uploadMultipleImages(
-    req.files as Express.Multer.File[],
-    "complaints",
-  );
-  const societyId = req.user!.society;
+  try {
 
-  if (!societyId) throw new ApiError(400, "Resident must belong to a society");
+    // const images = await uploadMultipleImages(
+    //   req.files as Express.Multer.File[],
+    //   "complaints",
+    // );
 
-  const complaint = await Complaint.create({
-    ...req.body,
-    society: societyId,
-    createdBy: req.user!._id,
-    images,
-    timeline: [addTimeline("pending", req.user!._id, "Complaint created")],
-  });
+    const image = req.files
+    const { message } = req.body
 
-  const populated = await Complaint.findById(complaint._id)
-    .populate("createdBy", "name email flatNumber")
-    .populate("society", "name");
+    const societyId = req.user!.society;
 
-  const admins = await User.find({
-    society: societyId,
-    role: "society_admin",
-    isActive: true,
-  });
+    if (!societyId) return errorResponse(res, 400, "Resident must belong to a society");
 
-  await Promise.all(
-    admins.map((admin) =>
-      createNotification({
-        recipientId: admin._id.toString(),
-        title: "New Complaint",
-        message: `New complaint: ${complaint.title}`,
-        type: "complaint",
-        link: `/complaints/${complaint._id}`,
-      }),
-    ),
-  );
+    console.log("message", message)
+    console.log("image", image)
 
-  await createAuditLog(req, "create", "Complaint", complaint._id.toString());
-  res.status(201).json({ success: true, data: populated });
+    // const complaint = await Complaint.create({
+    //   ...req.body,
+    //   society: societyId,
+    //   createdBy: req.user!._id,
+    //   images,
+    //   timeline: [addTimeline("pending", req.user!._id, "Complaint created")],
+    // });
+
+    // const populated = await Complaint.findById(complaint._id)
+    //   .populate("createdBy", "name email flatNumber")
+    //   .populate("society", "name");
+
+    // const admins = await User.find({
+    //   society: societyId,
+    //   role: "society_admin",
+    //   isActive: true,
+    // });
+
+    // await Promise.all(
+    //   admins.map((admin) =>
+    //     createNotification({
+    //       recipientId: admin._id.toString(),
+    //       title: "New Complaint",
+    //       message: `New complaint: ${complaint.title}`,
+    //       type: "complaint",
+    //       link: `/complaints/${complaint._id}`,
+    //     }),
+    //   ),
+    // );
+
+    // await createAuditLog(req, "create", "Complaint", complaint._id.toString());
+    // res.status(201).json({ success: true, data: populated });
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
+  }
 };
 
 export const getComplaints = async (req: AuthRequest, res: Response) => {
-  const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
-  const filter = buildComplaintFilter(req);
+  try {
 
-  const [complaints, total] = await Promise.all([
-    Complaint.find(filter)
-      .populate("createdBy", "name email flatNumber block")
-      .populate("assignedTo", "name email phone")
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit),
-    Complaint.countDocuments(filter),
-  ]);
+    const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
+    const filter = buildComplaintFilter(req);
 
-  res.json({
-    success: true,
-    ...paginatedResponse(complaints, total, page, limit),
-  });
+    const [complaints, total] = await Promise.all([
+      Complaint.find(filter)
+        .populate("createdBy", "name email flatNumber block")
+        .populate("assignedTo", "name email phone")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Complaint.countDocuments(filter),
+    ])
+
+    return successResponse(res, 200, "Fetched paginated compalints", { ...paginatedResponse(complaints, total, page, limit) });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
+  }
 };
 
 export const getComplaint = async (req: AuthRequest, res: Response) => {
-  const complaint = await Complaint.findById(req.params.id)
-    .populate("createdBy", "name email flatNumber block phone")
-    .populate("assignedTo", "name email phone")
-    .populate("comments.user", "name role avatar")
-    .populate("timeline.updatedBy", "name role");
+  try {
 
-  if (!complaint) throw new ApiError(404, "Complaint not found");
+    const complaint = await Complaint.findById(req.params.id)
+      .populate("createdBy", "name email flatNumber block phone")
+      .populate("assignedTo", "name email phone")
+      .populate("comments.user", "name role avatar")
+      .populate("timeline.updatedBy", "name role");
 
-  if (
-    req.user!.role === "resident" &&
-    complaint.createdBy._id.toString() !== req.user!._id
-  ) {
-    throw new ApiError(403, "Access denied");
+    if (!complaint) return errorResponse(res, 404, "Complaint not found");
+
+    if (
+      req.user!.role === "resident" &&
+      complaint.createdBy._id.toString() !== req.user!._id
+    ) {
+      return errorResponse(res, 403, "Access denied");
+    }
+
+    return successResponse(res, 200, "Fetched complaints!", { data: complaint });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
   }
-
-  res.json({ success: true, data: complaint });
 };
 
 export const assignComplaint = async (req: AuthRequest, res: Response) => {
-  const { assignedTo, note } = req.body;
-  const complaint = await Complaint.findById(req.params.id);
-  if (!complaint) throw new ApiError(404, "Complaint not found");
+  try {
 
-  complaint.assignedTo = assignedTo;
-  complaint.status = "assigned";
-  complaint.timeline.push(addTimeline("assigned", req.user!._id, note));
-  await complaint.save();
+    const { assignedTo, note } = req.body;
+    const complaint = await Complaint.findById(req.params.id);
+    if (!complaint) return errorResponse(res, 404, "Complaint not found");
 
-  await createNotification({
-    recipientId: assignedTo,
-    title: "Complaint Assigned",
-    message: `You have been assigned: ${complaint.title}`,
-    type: "complaint",
-    link: `/complaints/${complaint._id}`,
-  });
+    complaint.assignedTo = assignedTo;
+    complaint.status = "assigned";
+    complaint.timeline.push(addTimeline("assigned", req.user!._id, note));
+    await complaint.save();
 
-  await createAuditLog(req, "assign", "Complaint", complaint._id.toString());
-  res.json({ success: true, data: complaint });
+    await createNotification({
+      recipientId: assignedTo,
+      title: "Complaint Assigned",
+      message: `You have been assigned: ${complaint.title}`,
+      type: "complaint",
+      link: `/complaints/${complaint._id}`,
+    });
+
+    await createAuditLog(req, "assign", "Complaint", complaint._id.toString());
+
+    return successResponse(res, 200, "Assigned complaint!", { data: complaint });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
+  }
 };
 
-export const updateComplaintStatus = async (
-  req: AuthRequest,
-  res: Response,
-) => {
-  const { status, note } = req.body;
-  const complaint = await Complaint.findById(req.params.id);
-  if (!complaint) throw new ApiError(404, "Complaint not found");
+export const updateComplaintStatus = async (req: AuthRequest, res: Response,) => {
+  try {
 
-  if (
-    req.user!.role === "maintenance_staff" &&
-    complaint.assignedTo?.toString() !== req.user!._id
-  ) {
-    throw new ApiError(403, "Not assigned to this complaint");
+    const { status, note } = req.body;
+    const complaint = await Complaint.findById(req.params.id);
+    if (!complaint) return errorResponse(res, 404, "Complaint not found");
+
+    if (
+      req.user!.role === "maintenance_staff" &&
+      complaint.assignedTo?.toString() !== req.user!._id
+    ) {
+      return errorResponse(res, 403, "Not assigned to this complaint");
+    }
+
+    complaint.status = status;
+    complaint.timeline.push(addTimeline(status, req.user!._id, note));
+
+    // if (status === "resolved") {
+    //   complaint.resolvedAt = new Date();
+    //   const file
+    //   if (proof.length) complaint.completionProof.push(...proof);
+    // }
+
+    await complaint.save();
+
+    await createNotification({
+      recipientId: complaint.createdBy.toString(),
+      title: "Complaint Updated",
+      message: `Your complaint "${complaint.title}" is now ${status}`,
+      type: "complaint",
+      link: `/complaints/${complaint._id}`,
+    });
+
+    return successResponse(res, 200, "Updated complaint status!", { data: complaint });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
   }
-
-  complaint.status = status;
-  complaint.timeline.push(addTimeline(status, req.user!._id, note));
-
-  if (status === "resolved") {
-    complaint.resolvedAt = new Date();
-    const proof = await uploadMultipleImages(
-      req.files as Express.Multer.File[],
-      "complaint-proof",
-    );
-    if (proof.length) complaint.completionProof.push(...proof);
-  }
-
-  await complaint.save();
-
-  await createNotification({
-    recipientId: complaint.createdBy.toString(),
-    title: "Complaint Updated",
-    message: `Your complaint "${complaint.title}" is now ${status}`,
-    type: "complaint",
-    link: `/complaints/${complaint._id}`,
-  });
-
-  res.json({ success: true, data: complaint });
 };
 
 export const reopenComplaint = async (req: AuthRequest, res: Response) => {
-  const complaint = await Complaint.findById(req.params.id);
-  if (!complaint) throw new ApiError(404, "Complaint not found");
+  try {
 
-  if (complaint.createdBy.toString() !== req.user!._id) {
-    throw new ApiError(403, "Only the creator can reopen");
+    const complaint = await Complaint.findById(req.params.id);
+    if (!complaint) return errorResponse(res, 404, "Complaint not found");
+
+    if (complaint.createdBy.toString() !== req.user!._id) {
+      return errorResponse(res, 403, "Only the creator can reopen");
+    }
+
+    complaint.status = "reopened";
+    complaint.resolvedAt = undefined;
+    complaint.timeline.push(
+      addTimeline(
+        "reopened",
+        req.user!._id,
+        req.body.note || "Complaint reopened",
+      ),
+    );
+    await complaint.save();
+
+    return successResponse(res, 200, "Reopend complaint!", { data: complaint });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message)
   }
-
-  complaint.status = "reopened";
-  complaint.resolvedAt = undefined;
-  complaint.timeline.push(
-    addTimeline(
-      "reopened",
-      req.user!._id,
-      req.body.note || "Complaint reopened",
-    ),
-  );
-  await complaint.save();
-
-  res.json({ success: true, data: complaint });
 };
 
 export const addComment = async (req: AuthRequest, res: Response) => {
-  const complaint = await Complaint.findById(req.params.id);
-  if (!complaint) throw new ApiError(404, "Complaint not found");
+  try {
+    const complaint = await Complaint.findById(req.params.id);
 
-  complaint.comments.push({
-    user: req.user!._id as unknown as import("mongoose").Types.ObjectId,
-    text: req.body.text,
-    createdAt: new Date(),
-  });
-  await complaint.save();
+    if (!complaint) {
+      return errorResponse(res, 404, "Complaint not found");
+    }
 
-  const updated = await Complaint.findById(complaint._id).populate(
-    "comments.user",
-    "name role avatar",
-  );
+    complaint.comments.push({
+      user: req.user!._id as unknown as import("mongoose").Types.ObjectId,
+      text: req.body.text,
+      createdAt: new Date(),
+    });
 
-  res.json({ success: true, data: updated });
+    await complaint.save();
+
+    const updatedComplaint = await Complaint.findById(complaint._id).populate(
+      "comments.user",
+      "name role avatar",
+    );
+
+    return successResponse(res, 200, "Comment added successfully", { data: updatedComplaint });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message || "Failed to add comment"
+    );
+  }
 };
 
 export const getComplaintHistory = async (req: AuthRequest, res: Response) => {
-  const filter: Record<string, unknown> = {
-    createdBy: req.user!._id,
-    status: { $in: ["resolved", "reopened"] },
-  };
-  if (req.user!.society) filter.society = req.user!.society;
+  try {
+    const filter: Record<string, unknown> = {
+      createdBy: req.user!._id,
+      status: { $in: ["resolved", "reopened"] },
+    };
 
-  const complaints = await Complaint.find(filter)
-    .sort({ updatedAt: -1 })
-    .limit(50);
+    if (req.user!.society) {
+      filter.society = req.user!.society;
+    }
 
-  res.json({ success: true, data: complaints });
+    const complaints = await Complaint.find(filter)
+      .sort({ updatedAt: -1 })
+      .limit(50);
+
+    return successResponse(res, 200, "Complaint history fetched successfully", { data: complaints });
+
+  } catch (err: any) {
+    return errorResponse(res, 500, err.message || "Failed to fetch complaint history");
+  }
 };

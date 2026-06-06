@@ -26,7 +26,7 @@ export const DashboardLayout = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-y-auto">
         <Header onMenuClick={() => setMobileOpen(true)} />
         <main className="flex-1 p-4 lg:p-6">
           <Outlet />

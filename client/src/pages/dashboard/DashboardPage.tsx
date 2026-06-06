@@ -89,7 +89,7 @@ export const DashboardPage = () => {
   return (
     <>
       {user?.role === "society_admin" || user?.role === "super_admin" ? (
-        <div>
+        <div className="mb-4">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Welcome, {user?.name}
           </h1>
@@ -111,7 +111,7 @@ export const DashboardPage = () => {
       )}
 
       {(user?.role === "super_admin" || user?.role === "society_admin") && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 my-4">
           <StatCard
             title="Total Complaints"
             value={analytics?.complaints.total ?? 0}

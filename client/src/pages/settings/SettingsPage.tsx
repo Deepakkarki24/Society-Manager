@@ -27,7 +27,7 @@ export const SettingsPage = () => {
 
   useEffect(() => {
     api
-      .get("/auth/me")
+      .get("/api/auth/me")
       .then(({ data }) => setFamily(data.data.familyMembers || []));
   }, []);
 
@@ -37,7 +37,7 @@ export const SettingsPage = () => {
   };
 
   const addFamily = async () => {
-    await api.post("/users/family", familyForm);
+    await api.post("/api/users/family", familyForm);
     toast.success("Family member added");
     const { data } = await api.get("/auth/me");
     setFamily(data.data.familyMembers || []);
@@ -45,7 +45,7 @@ export const SettingsPage = () => {
   };
 
   const submitFeedback = async () => {
-    await api.post("/feedback", feedback);
+    await api.post("/api/feedback", feedback);
     toast.success("Feedback submitted");
     setFeedback({ subject: "", message: "", rating: 5 });
   };

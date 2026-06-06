@@ -1,47 +1,142 @@
 import { Response } from "express";
 import { Notification } from "../../models";
-import { ApiError } from "../../utils/ApiError";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
+import { errorResponse, successResponse } from "../../utils/ApiResponse";
 
-export const getNotifications = async (req: AuthRequest, res: Response) => {
-  const { page, limit, skip } = getPagination(req.query.page, req.query.limit);
-  const filter = { recipient: req.user!._id };
-  if (req.query.unread === "true") Object.assign(filter, { isRead: false });
+export const getNotifications = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const { page, limit, skip } = getPagination(
+      req.query.page,
+      req.query.limit,
+    );
 
-  const [notifications, total] = await Promise.all([
-    Notification.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
-    Notification.countDocuments(filter),
-  ]);
+    const filter: Record<string, unknown> = {
+      recipient: req.user!._id,
+    };
 
-  res.json({
-    success: true,
-    ...paginatedResponse(notifications, total, page, limit),
-  });
+    if (req.query.unread === "true") {
+      filter.isRead = false;
+    }
+
+    const [notifications, total] = await Promise.all([
+      Notification.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Notification.countDocuments(filter),
+    ]);
+
+    return successResponse(
+      res,
+      200,
+      "Notifications fetched successfully",
+      paginatedResponse(notifications, total, page, limit),
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to fetch notifications",
+    );
+  }
 };
 
-export const markAsRead = async (req: AuthRequest, res: Response) => {
-  const notification = await Notification.findOneAndUpdate(
-    { _id: req.params.id, recipient: req.user!._id },
-    { isRead: true },
-    { new: true },
-  );
-  if (!notification) throw new ApiError(404, "Notification not found");
-  res.json({ success: true, data: notification });
+// export const markAsRead = async (
+//   req: AuthRequest,
+//   res: Response,
+// ) => {
+//   try {
+//     const notification = await Notification.findOneAndUpdate(
+//       {
+//         _id: req.params.id,
+//         recipient: req.user!._id,
+//       },
+//       {
+//         isRead: true,
+//       },
+//       {
+//         new: true,
+//       },
+//     );
+
+//     if (!notification) {
+//       return errorResponse(
+//         res,
+//         404,
+//         "Notification not found",
+//       );
+//     }
+
+//     return successResponse(
+//       res,
+//       200,
+//       "Notification marked as read",
+//       notification,
+//     );
+//   } catch (err: any) {
+//     return errorResponse(
+//       res,
+//       500,
+//       err.message || "Failed to update notification",
+//     );
+//   }
+// };
+
+export const markAllAsRead = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    await Notification.updateMany(
+      {
+        recipient: req.user!._id,
+        isRead: false,
+      },
+      {
+        isRead: true,
+      },
+    );
+
+    return successResponse(
+      res,
+      200,
+      "All notifications marked as read",
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to mark notifications as read",
+    );
+  }
 };
 
-export const markAllAsRead = async (req: AuthRequest, res: Response) => {
-  await Notification.updateMany(
-    { recipient: req.user!._id, isRead: false },
-    { isRead: true },
-  );
-  res.json({ success: true, message: "All notifications marked as read" });
-};
+export const getUnreadCount = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const count = await Notification.countDocuments({
+      recipient: req.user!._id,
+      isRead: false,
+    });
 
-export const getUnreadCount = async (req: AuthRequest, res: Response) => {
-  const count = await Notification.countDocuments({
-    recipient: req.user!._id,
-    isRead: false,
-  });
-  res.json({ success: true, data: { count } });
+    return successResponse(
+      res,
+      200,
+      "Unread count fetched successfully",
+      { count },
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to fetch unread count",
+    );
+  }
 };

@@ -21,36 +21,36 @@ export const ComplaintDetailPage = () => {
   const [status, setStatus] = useState('');
 
   const load = () => {
-    api.get(`/complaints/${id}`).then(({ data }) => setComplaint(data.data));
+    api.get(`/api/complaints/${id}`).then(({ data }) => setComplaint(data.data));
   };
 
   useEffect(() => {
     load();
     if (user?.role === 'society_admin') {
-      api.get('/users/staff').then(({ data }) => setStaff(data.data || []));
+      api.get('/api/users/staff').then(({ data }) => setStaff(data.data || []));
     }
   }, [id, user?.role]);
 
   const handleAssign = async () => {
-    await api.patch(`/complaints/${id}/assign`, { assignedTo: assignTo });
+    await api.patch(`/api/complaints/${id}/assign`, { assignedTo: assignTo });
     toast.success('Assigned');
     load();
   };
 
   const handleStatus = async () => {
-    await api.patch(`/complaints/${id}/status`, { status });
+    await api.patch(`/api/complaints/${id}/status`, { status });
     toast.success('Status updated');
     load();
   };
 
   const handleComment = async () => {
-    await api.post(`/complaints/${id}/comments`, { text: comment });
+    await api.post(`/api/complaints/${id}/comments`, { text: comment });
     setComment('');
     load();
   };
 
   const handleReopen = async () => {
-    await api.post(`/complaints/${id}/reopen`);
+    await api.post(`/api/complaints/${id}/reopen`);
     toast.success('Complaint reopened');
     load();
   };

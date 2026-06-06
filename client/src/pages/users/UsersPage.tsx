@@ -15,11 +15,11 @@ export const UsersPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const load = () => api.get('/users').then(({ data }) => setUsers(data.data || []));
+  const load = () => api.get('/api/users').then(({ data }) => setUsers(data.data || []));
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, string>) => {
-    await api.post('/users', data);
+    await api.post('/api/users', data);
     toast.success('User created');
     setModalOpen(false);
     reset();
