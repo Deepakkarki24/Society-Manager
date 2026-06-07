@@ -15,7 +15,7 @@ export const UsersPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const load = () => api.get('/api/users').then(({ data }) => setUsers(data.data || []));
+  const load = () => api.get('/api/users').then(({ data }) => setUsers(data.data.data || []));
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, string>) => {

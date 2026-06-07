@@ -4,19 +4,19 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addNotification, fetchUnreadCount } from '@/store/slices/notificationSlice';
 import type { Notification } from '@/types';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
 
 let socket: Socket | null = null;
 
 export const useSocket = () => {
   const dispatch = useAppDispatch();
-  const { token, user } = useAppSelector((s) => s.auth);
+  const { user } = useAppSelector((s) => s.auth);
 
   useEffect(() => {
-    if (!token || !user) return;
+    if (!user) return;
 
     socket = io(SOCKET_URL, {
-      auth: { token },
+      auth: { user },
       query: { societyId: typeof user.society === 'string' ? user.society : user.society?._id },
     });
 
@@ -30,7 +30,7 @@ export const useSocket = () => {
       socket?.disconnect();
       socket = null;
     };
-  }, [token, user, dispatch]);
+  }, [user, dispatch]);
 };
 
 export const getSocket = () => socket;

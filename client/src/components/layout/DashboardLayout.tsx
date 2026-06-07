@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, SidebarMobile } from "./Sidebar";
 import { Header } from "./Header";
 import { useAppSelector } from "@/store/hooks";
 import { useSocket } from "@/hooks/useSocket";
@@ -22,7 +22,7 @@ export const DashboardLayout = () => {
             onClick={() => setMobileOpen(false)}
           />
           <div className="absolute left-0 top-0 h-full w-64 bg-white dark:bg-gray-900">
-            <Sidebar role={user.role} />
+            <SidebarMobile role={user.role} />
           </div>
         </div>
       )}

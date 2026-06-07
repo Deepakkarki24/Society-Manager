@@ -10,6 +10,8 @@ const ChatInput = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isBottom, setIsBottom] = useState<boolean>(false)
 
+  console.log(loading)
+
 
   const handleSend = async () => {
     setLoading(true)

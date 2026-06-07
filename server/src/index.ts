@@ -13,7 +13,7 @@ import {
   PORT,
 } from "./config/env";
 
-const Port = Number(PORT) || 5000;
+const Port = Number(PORT) || 3001;
 
 if (NODE_ENV !== "production") {
   connectDatabase(MONGODB_URI || "");
@@ -60,8 +60,8 @@ const startServer = async () => {
     });
   });
 
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  server.listen(Port, () => {
+    console.log(`Server running on port ${Port}`);
   });
 };
 
