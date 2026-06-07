@@ -1,13 +1,13 @@
-# SIMP — Society Management Platform
+# SIMP — Society Issues Management Platform
 
-Full-stack SaaS for managing residential societies: complaints, maintenance, announcements, visitors, billing, and real-time notifications.
+AI-Powered Society Operations Platform that enables residents to create complaints, retrieve society information, track maintenance requests, and interact with community services using natural language and voice commands.
 
 ## Tech Stack
 
 | Layer | Technologies |
 |-------|----------------|
 | Frontend | React, TypeScript, Tailwind CSS, Redux Toolkit, React Router, Axios, Socket.IO Client, Recharts |
-| Backend | Node.js, Express, MongoDB, Mongoose, JWT, Socket.IO, Cloudinary |
+| Backend | Node.js, Express, MongoDB, Mongoose, JWT, Socket.IO |
 | Auth | JWT + Role-Based Access Control |
 
 ## User Roles
@@ -36,21 +36,21 @@ simp/
 
 ```bash
 cd server
-cp .env.example .env
-# Edit MONGODB_URI and JWT_SECRET
+cp .env
+# Edit credentials like MONGODB_URI, JWT_SECRET, and GOOGLE_API_KEY. etc
 
 npm install
-npm run seed    # Optional: demo users
+npm run seed    # Optional: demo data
 npm run dev
 ```
 
-API: `http://localhost:5000`
+API: `http://localhost:3001`
 
 ### Frontend
 
 ```bash
 cd client
-cp .env.example .env
+cp .env
 
 npm install
 npm run dev
@@ -62,9 +62,9 @@ App: `http://localhost:5173`
 
 | Role | Email | Password |
 |------|-------|----------|
-| Super Admin | superadmin@simp.com | admin123 |
-| Society Admin | admin@greenvalley.com | admin123 |
-| Resident | resident@simp.com | admin123 |
+| Super Admin | deepak@superadmin.com | admin123 |
+| Society Admin | admin@starktower.com | admin123 |
+| Resident | deepak@simp.com | admin123 |
 | Maintenance Staff | staff@simp.com | admin123 |
 
 ## API Overview
@@ -82,15 +82,15 @@ App: `http://localhost:5173`
 
 ## Features
 
-- Complaint categories, timeline, comments, images, reopening
+- Complaint categories, comments, images, and reopening
 - Real-time notifications via Socket.IO
 - Maintenance invoice generation & payment tracking (gateway-ready)
 - Dark/light theme in Settings
 - Pagination, search, filtering on list endpoints
-- Cloudinary image uploads (falls back to base64 without credentials)
+- Image uploads for now (falls back to base64 without credentials)
 
 ## Production Notes
 
-- Set strong `JWT_SECRET` and configure Cloudinary for file storage
+- Set strong `JWT_SECRET` and Google api key
 - Integrate payment gateway via `transactionId` on `PATCH /api/payments/:id/pay`
 - Use `npm run build` in both folders for deployment
