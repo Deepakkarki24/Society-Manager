@@ -220,7 +220,6 @@ export const reopenComplaint = async (req: AuthRequest, res: Response) => {
 
     complaint.status = "reopened";
     complaint.resolvedAt = undefined;
-
     await complaint.save();
 
     return successResponse(res, 200, "Reopend complaint!", { data: complaint });

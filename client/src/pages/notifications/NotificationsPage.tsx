@@ -11,8 +11,6 @@ export const NotificationsPage = () => {
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((s) => s.notifications);
 
-  console.log(items)
-
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
