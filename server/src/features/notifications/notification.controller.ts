@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { Notification } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
+import { Notification } from "../../models/Notification";
 
 export const getNotifications = async (
   req: AuthRequest,

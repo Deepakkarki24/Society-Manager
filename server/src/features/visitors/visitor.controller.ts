@@ -1,8 +1,9 @@
 import { Response } from "express";
-import { Visitor, User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { errorResponse } from "../../utils/ApiResponse";
+import { User } from "../../models/User";
+import { Visitor } from "../../models/Visitor";
 
 const getSocietyId = (req: AuthRequest) =>
     req.user!.role === "super_admin"

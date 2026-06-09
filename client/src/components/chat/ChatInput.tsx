@@ -1,34 +1,41 @@
-import { useRef, useState } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Paperclip, Send, XIcon } from "lucide-react";
 import { generateComplaint } from "@/api-manager/requestHandler";
 import toast from "react-hot-toast";
+import { fileToBase64 } from "@/utils/utils";
+import { SpinnerGapIcon } from "@phosphor-icons/react";
 
-const ChatInput = () => {
+interface ChatInputInterface {
+  currentSessionId: string | null
+}
+
+const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId }) => {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isBottom, setIsBottom] = useState<boolean>(false)
-
-  console.log(loading)
-
+  const [previewImage, setPreviewImage] = useState("")
 
   const handleSend = async () => {
-    setLoading(true)
+    setIsLoading(true)
     try {
-      if (!message.trim()) return;
+      if (!message.trim() || !currentSessionId) return;
 
-      const res = await generateComplaint(message, image)
+      const res = await generateComplaint(message, image, currentSessionId)
       if (res.success) {
         toast.success("Complaint generated!");
-
+      } else if (!res.success) {
+        toast.error("Unfortunately your complaint not submitted! Try again after sometime!");
       }
     } catch (err) {
       toast.error("Unfortunately your complaint not submitted! Try again after sometime");
+      console.log("failed in catch block")
     } finally {
-      setLoading(false)
+      setIsLoading(false)
       setMessage("");
       setImage(null)
+      setPreviewImage("")
     }
   };
 
@@ -51,8 +58,32 @@ const ChatInput = () => {
     textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
   };
 
+  const setPreviewFile = async (file: File) => {
+    if (file) {
+      const result = await fileToBase64(file)
+
+      if (result) {
+        setPreviewImage(result)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (image) {
+      setPreviewFile(image)
+    }
+  }, [image])
+
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="relative w-full max-w-4xl mx-auto">
+      {previewImage &&
+        <div className="absolute -top-25 left-2 w-22 aspect-square rounded-lg overflow-hidden">
+          <div className="relative w-full h-full bg-red-600">
+            <img src={previewImage} alt="preview Image" className="object-cover w-full h-full" />
+            <XIcon onClick={() => setPreviewImage("")} className="text-white cursor-pointer absolute top-0 right-1" size={18} />
+          </div>
+        </div>
+      }
       <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-3xl p-2 border border-white/5 dark:bg-white/5 shadow-sm`}>
         {/* Upload Button */}
         <button
@@ -86,7 +117,10 @@ const ChatInput = () => {
           disabled={!message.trim()}
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black text-white transition disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <Send size={18} />
+          {
+            !isloading ? <Send size={18} /> :
+              <SpinnerGapIcon size={18} className="animate-spin transition-all ease-in" />
+          }
         </button>
       </div>
     </div>

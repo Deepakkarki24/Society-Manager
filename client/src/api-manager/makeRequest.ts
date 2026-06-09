@@ -40,7 +40,7 @@ class MakeRequest {
         return this.axiosRequest('GET', url, undefined, params);
     }
 
-    static post = (url: string, data: object) => {
+    static post = (url: string, data?: object) => {
         return this.axiosRequest('POST', url, data);
     }
 

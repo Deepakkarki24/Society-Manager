@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { User, Society } from "../models";
 import { MONGODB_URI } from "../config/env";
+import { Society } from "../models/Society";
+// import { User } from "../models/User";
 
 const seed = async () => {
   await mongoose.connect(MONGODB_URI!);

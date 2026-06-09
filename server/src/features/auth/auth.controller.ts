@@ -1,10 +1,10 @@
 import { Response } from "express";
-import { User } from "../../models";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
 import { AuthRequest } from "../../middleware/auth";
 import { createAuditLog } from "../../services/audit.service";
 import { signToken } from "../../utils/token";
 import { NODE_ENV } from "../../config/env";
+import { User } from "../../models/User";
 
 export const register = async (req: AuthRequest, res: Response) => {
   try {

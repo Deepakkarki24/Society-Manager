@@ -1,11 +1,14 @@
 import { Response } from "express";
-import { Complaint, User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { createAuditLog } from "../../services/audit.service";
 import { createNotification } from "../../services/notification.service";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
 import { generateModelResponse } from "../../runner";
+import { Complaint } from "../../models/Complaint";
+import { User } from "../../models/User";
+import { Chat } from "../../models/chat/Chat";
+import { ChatSession } from "../../models/chat/ChatSession";
 
 const buildComplaintFilter = (req: AuthRequest): Record<string, unknown> => {
   const filter: Record<string, unknown> = {};
@@ -39,12 +42,17 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
   try {
 
     const image = req.file
-    const { message } = req.body
+    const { message, sessionId } = req.body
+
     const societyId = req.user?.society;
+
+    console.log("sessionId", sessionId)
 
     if (!societyId) return errorResponse(res, 400, "Resident must belong to a society");
 
     const modelResponse = await generateModelResponse(message)
+
+    if (!modelResponse) return errorResponse(res, 503, "AI service is temporarily busy. Please try again.")
 
     const { title, description, priority, category } = modelResponse.data
 
@@ -62,6 +70,22 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
       createdBy: req.user!._id,
       image: imageBase64
     });
+
+    await Chat.create({
+      sessionId,
+      userId: req.user?._id,
+      type: "complaint-card",
+      role: "user",
+      complaintId: complaint._id,
+      complaint: {
+        title,
+        description,
+        category,
+        priority,
+        status: "pending",
+        image
+      }
+    })
 
     const populated = await Complaint.findById(complaint._id)
       .populate("createdBy", "name email flatNumber")
@@ -89,7 +113,7 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
 
     return successResponse(res, 201, "Complaint generated!", { data: populated });
   } catch (err: any) {
-    return errorResponse(res, 500, err.message)
+    return errorResponse(res, 500, err)
   }
 };
 

@@ -1,9 +1,10 @@
 import { Response } from "express";
-import { Announcement, User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { createNotification } from "../../services/notification.service";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
+import { Announcement } from "../../models/Announcement";
+import { User } from "../../models/User";
 
 export const createAnnouncement = async (req: AuthRequest, res: Response) => {
   try {

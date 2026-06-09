@@ -1,9 +1,11 @@
 import { Response } from "express";
-import { Payment, Society, User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { createNotification } from "../../services/notification.service";
 import { errorResponse } from "../../utils/ApiResponse";
+import { Society } from "../../models/Society";
+import { User } from "../../models/User";
+import { Payment } from "../../models/Payment";
 
 export const generateInvoices = async (req: AuthRequest, res: Response) => {
     const { month, year } = req.body;

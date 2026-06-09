@@ -13,7 +13,7 @@ export const SocietiesPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
-  const load = () => api.get('/api/societies').then(({ data }) => setSocieties(data.data || []));
+  const load = () => api.get('/api/societies').then(({ data }) => setSocieties(data.data.data || []));
   useEffect(() => { load(); }, []);
 
   const onCreate = async (data: Record<string, unknown>) => {

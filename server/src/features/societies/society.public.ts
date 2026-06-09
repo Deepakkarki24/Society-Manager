@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Society } from "../../models";
+import { Society } from "../../models/Society";
 
 const router = Router();
 

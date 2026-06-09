@@ -3,18 +3,16 @@ import { runGoogleGeminiModel } from "./config/modelAi.config"
 
 export const generateModelResponse = async (message: string) => {
 
-    const SYSTEM_INSTRUCTION = `You are a complaint extraction assistant.
+  const SYSTEM_INSTRUCTION = `You are a complaint extraction assistant.
 
 Extract complaint details and return ONLY valid JSON.
 
 Rules:
-- Create a short title in the SAME language as the user's complaint.
-- Keep the description in the SAME language as the user's complaint.
+- Generate a concise title that summarizes the complaint in the SAME language as the user's.
+- Preserve the complaint description exactly as provided, without any modifications.
 - Do not translate the complaint.
-- Select category from:
-  water, electricity, lift, security, parking, cleaning, maintenance, other
-- Select priority from:
-  low, medium, high, critical
+- Select category from: water, electricity, lift, security, parking, cleaning, maintenance, other
+- Select priority from: low, medium, high, critical
 - Infer category and priority from the complaint context.
 
 Output:
@@ -25,5 +23,5 @@ Output:
   "priority": ""
 }`
 
-    return await runGoogleGeminiModel(SYSTEM_INSTRUCTION, message)
+  return await runGoogleGeminiModel(SYSTEM_INSTRUCTION, message)
 }

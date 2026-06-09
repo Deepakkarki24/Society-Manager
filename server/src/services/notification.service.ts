@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { Notification } from '../models';
+import { Notification } from '../models/Notification';
 
 let io: Server | null = null;
 

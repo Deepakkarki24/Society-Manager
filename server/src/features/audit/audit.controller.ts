@@ -1,7 +1,7 @@
 import { Response } from "express";
-import { AuditLog } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
+import { AuditLog } from "../../models/AuditLog";
 
 export const getAuditLogs = async (req: AuthRequest, res: Response) => {
   const { page, limit, skip } = getPagination(req.query.page, req.query.limit);

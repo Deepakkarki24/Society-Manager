@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { AuditLog } from '../models';
 import { AuthRequest } from '../middleware/auth';
+import { AuditLog } from '../models/AuditLog';
 
 export const createAuditLog = async (
   req: AuthRequest,

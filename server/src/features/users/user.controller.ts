@@ -1,10 +1,10 @@
 import { Response } from "express";
-import { User } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { createAuditLog } from "../../services/audit.service";
 import { UserRole } from "../../types";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
+import { User } from "../../models/User";
 
 const getSocietyFilter = (req: AuthRequest): Record<string, unknown> => {
   if (req.user!.role === "super_admin") {

@@ -59,7 +59,9 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
       config,
       contents,
     });
+
     let result = "";
+
     for await (const chunk of response) {
       if (chunk.text) {
         result += chunk.text ?? ""
@@ -76,15 +78,9 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
       err: ""
     };
 
-  } catch (err) {
-    console.log("err", (err as any).message)
-    return {
-      success: false,
-      data: "",
-      message: "",
-      service: "google",
-      err: (err as any).message
-    };
+  } catch (err: any) {
+    console.error(err)
+    throw err;
   }
 }
 

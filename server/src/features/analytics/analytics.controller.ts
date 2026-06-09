@@ -1,7 +1,11 @@
 import { Response } from "express";
 import mongoose from "mongoose";
-import { Complaint, Payment, User, Society, Announcement } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
+import { Complaint } from "../../models/Complaint";
+import { User } from "../../models/User";
+import { Society } from "../../models/Society";
+import { Payment } from "../../models/Payment";
+import { Announcement } from "../../models/Announcement";
 
 const getSocietyScope = (
   req: AuthRequest,

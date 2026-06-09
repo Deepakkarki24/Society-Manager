@@ -11,6 +11,8 @@ import notificationRoutes from "../features/notifications/notification.routes";
 import analyticsRoutes from "../features/analytics/analytics.routes";
 import feedbackRoutes from "../features/feedback/feedback.routes";
 import auditRoutes from "../features/audit/audit.routes";
+import sessionRoutes from "../features/chat/session.routes";
+import chatRoutes from "../features/chat/chat.routes";
 
 const router = Router();
 
@@ -30,5 +32,7 @@ router.use("/notifications", notificationRoutes);
 router.use("/analytics", analyticsRoutes);
 router.use("/feedback", feedbackRoutes);
 router.use("/audit-logs", auditRoutes);
+router.use("/sessions", sessionRoutes);
+router.use("/chats", chatRoutes);
 
 export default router;

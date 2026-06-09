@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { Feedback } from "../../models";
 import { AuthRequest } from "../../middleware/auth";
 import { getPagination, paginatedResponse } from "../../utils/pagination";
 import { errorResponse, successResponse } from "../../utils/ApiResponse";
+import { Feedback } from "../../models/Feedback";
 
 export const submitFeedback = async (
   req: AuthRequest,

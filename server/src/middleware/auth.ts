@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../models";
 import { JwtPayload, UserRole } from "../types";
 import { JWT_SECRET } from "../config/env";
 import { errorResponse } from "../utils/ApiResponse";
+import { User } from "../models/User";
 
 export interface AuthRequest extends Request {
   user?: {
