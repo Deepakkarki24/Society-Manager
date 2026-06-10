@@ -52,6 +52,7 @@ export const DashboardPage = () => {
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSessionFecthing, setIsSessionFetching] = useState(false)
+  const [isChatFecthing, setIsChatFetching] = useState(true)
   const [userChats, setUserChats] = useState<ComplaintCardProps[]>([])
   const [chatsRole, setChatRole] = useState<"user" | "ai" | null>(null)
   const [currentSessionId, setCurrentSessionId] =
@@ -106,17 +107,29 @@ export const DashboardPage = () => {
 
   const fetchCurrentSessionChats = async (params: { sessionId: string }) => {
     try {
+
+      setIsChatFetching(true)
+
       const response = await getCurrentSessionChats(params)
-      console.log(response.data)
-      // setCurrentSessionId(params.sessionId)
+
+      if (!response.success) {
+        setIsChatFetching(false)
+        return
+      }
+
+      const data = response.data as any
+
+      // console.log(data.data)
+      setUserChats(data.data)
+
     } catch (err) {
       console.log(err)
+    } finally {
+      setIsChatFetching(false)
     }
   }
 
   const fecthSessions = async () => {
-
-    setIsSessionFetching(true)
 
     try {
       const response = await getSessions()
@@ -162,7 +175,7 @@ export const DashboardPage = () => {
       scrollPositionRef.current = sessionsContainerRef.current.scrollLeft;
     }
 
-    // fetchCurrentSessionChats({ sessionId: sessionId || "" })
+    fetchCurrentSessionChats({ sessionId: sessionId || "" })
 
     setCurrentSessionId(sessionId);
   };
@@ -171,6 +184,8 @@ export const DashboardPage = () => {
     getDashboardAnalyticsData();
     fecthSessions();
     initializeChat()
+    fetchCurrentSessionChats({ sessionId: currentSessionId || "" })
+
   }, []);
 
   useEffect(() => {
@@ -216,7 +231,7 @@ export const DashboardPage = () => {
         </div>
       ) : (
         <div className="relative w-full h-auto">
-          {userChats.length !== 0 ?
+          {(userChats.length === 0 && !isChatFecthing) ?
             <div className={`flex flex-col items-center justify-center gap-18 w-full min-h-[80dvh] h-full`}>
               <div className="flex flex-col justify-center items-center">
                 <h1 className="text-4xl tracking-wide font-semibold text-gray-900 dark:text-white">
@@ -229,9 +244,11 @@ export const DashboardPage = () => {
               <ChatInput currentSessionId={currentSessionId} />
             </div>
             :
-            <div className={`relative flex flex-col items-end justify-end gap-10 w-full max-w-4xl mx-auto min-h-[80dvh] h-full`}>
-              {sessions.length > 0 && (
-                <div className="absolute top-0 left-0 w-full">
+            <div className={`relative flex flex-col items-end gap-10 w-full max-w-4xl mx-auto h-full min-h-[80dvh]`}>
+
+              {/* session header */}
+              {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
+                <div className="sticky top-0 z-10 w-full">
                   <div className="flex items-center gap-2 p-2 bg-white/5 backdrop-blur-sm rounded-lg">
                     <button
                       onClick={() => createNewChatSession()}
@@ -268,12 +285,19 @@ export const DashboardPage = () => {
                 </div>
               )}
 
-              {
-                userChats && userChats.map((m) => (
-                  <ComplaintCard title={m.title} description={m.description} image={m.image} category={m.category} createdAt={m.createdAt} status={m.status} priority={m.priority} />
-                ))
-              }
-              <ChatInput currentSessionId={currentSessionId} />
+              {/* Chat Area */}
+              <div className="w-full flex flex-col items-end gap-4">
+                {
+                  (userChats.length > 0 && !isChatFecthing) && userChats.map((m: any) => (
+                    <ComplaintCard title={m.complaint.title} description={m.complaint.description} image={m.complaint.image} category={m.complaint.category} createdAt={m.complaint.createdAt} status={m.complaint.status} priority={m.complaint.priority} />
+                  ))
+                }
+              </div>
+
+              {/* Input */}
+              <div className="w-full h-full sticky bottom-0 z-10">
+                <ChatInput currentSessionId={currentSessionId} />
+              </div>
             </div>
           }
         </ div >

@@ -54,21 +54,17 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
       },
     ];
 
-    const response = await ai.models.generateContentStream({
+    console.log("Using model:", model);
+
+    const response = await ai.models.generateContent({
       model,
       config,
       contents,
     });
 
-    let result = "";
+    console.log("got response in model config", response)
 
-    for await (const chunk of response) {
-      if (chunk.text) {
-        result += chunk.text ?? ""
-      }
-    }
-
-    const finalResult = JSON.parse(result);
+    const finalResult = JSON.parse(response.text || "");
 
     return {
       success: true,
@@ -79,7 +75,7 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
     };
 
   } catch (err: any) {
-    console.error(err)
+    console.error(JSON.stringify(err, null, 2));
     throw err;
   }
 }

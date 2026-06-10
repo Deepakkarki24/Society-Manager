@@ -11,11 +11,11 @@ export const getCurrentSessionChat = async (req: AuthRequest, res: Response) => 
 
         if (!sessionId) return errorResponse(res, 401, "Session id not found!")
 
-        const foundChat = await Chat.findOne({ sessionId })
-
+        const foundChat = await Chat.find({ sessionId }).populate("complaint")
+        
         if (!foundChat) return errorResponse(res, 401, "Chat not found!")
 
-        return successResponse(res, 200, "Chat fetched!", foundChat)
+        return successResponse(res, 200, "Chats fetched!", foundChat)
 
     } catch (err) {
         return errorResponse(res, 500, (err as any).message)

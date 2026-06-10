@@ -47,14 +47,18 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
     const societyId = req.user?.society;
 
     console.log("sessionId", sessionId)
+    console.log("message", message)
+    console.log("image", image)
 
     if (!societyId) return errorResponse(res, 400, "Resident must belong to a society");
 
     const modelResponse = await generateModelResponse(message)
-
+    console.log("got model response")
     if (!modelResponse) return errorResponse(res, 503, "AI service is temporarily busy. Please try again.")
 
     const { title, description, priority, category } = modelResponse.data
+
+    console.log("modelResponse", modelResponse)
 
     let imageBase64
     if (image) {
@@ -76,15 +80,16 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
       userId: req.user?._id,
       type: "complaint-card",
       role: "user",
-      complaintId: complaint._id,
-      complaint: {
-        title,
-        description,
-        category,
-        priority,
-        status: "pending",
-        image
-      }
+      complaint: complaint._id,
+      // complaint: {
+      //   title,
+      //   description,
+      //   category,
+      //   priority,
+      //   status: "pending",
+      //   image: imageBase64,
+      //   createdAt: complaint.createdAt
+      // }
     })
 
     const populated = await Complaint.findById(complaint._id)

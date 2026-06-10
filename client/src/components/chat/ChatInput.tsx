@@ -84,7 +84,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId }) => {
           </div>
         </div>
       }
-      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-3xl p-2 border border-white/5 dark:bg-white/5 shadow-sm`}>
+      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-3xl p-2 border border-white/5 dark:bg-gray-900 shadow-sm`}>
         {/* Upload Button */}
         <button
           type="button"
