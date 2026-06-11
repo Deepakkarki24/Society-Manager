@@ -63,6 +63,17 @@ export const DashboardPage = () => {
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
   const scrollPositionRef = useRef(0);
 
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (!chatContainerRef.current) return;
+
+    chatContainerRef.current.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
   const initializeChat = async () => {
     try {
 
@@ -158,6 +169,9 @@ export const DashboardPage = () => {
   }
 
   const createNewChatSession = async () => {
+
+    if (sessions && userChats.length === 0) return
+
     try {
       const response = await createNewSession()
       const { data } = response.data as ({ data: any })
@@ -175,24 +189,37 @@ export const DashboardPage = () => {
       scrollPositionRef.current = sessionsContainerRef.current.scrollLeft;
     }
 
-    fetchCurrentSessionChats({ sessionId: sessionId || "" })
+    fetchCurrentSessionChats({ sessionId: sessionId })
 
     setCurrentSessionId(sessionId);
   };
 
   useEffect(() => {
     getDashboardAnalyticsData();
-    fecthSessions();
     initializeChat()
-    fetchCurrentSessionChats({ sessionId: currentSessionId || "" })
+
+    if (!currentSessionId) return
+
+    fecthSessions();
+    fetchCurrentSessionChats({ sessionId: currentSessionId })
 
   }, []);
 
   useEffect(() => {
-    fecthSessions()
 
-    localStorage.setItem(currentSessionKey, currentSessionId || "")
+    if (!currentSessionId) return
+
+    fecthSessions()
+    fetchCurrentSessionChats({ sessionId: currentSessionId })
+
+    localStorage.setItem(currentSessionKey, currentSessionId)
   }, [currentSessionId]);
+
+  useEffect(() => {
+    if (!isChatFecthing) {
+      scrollToBottom();
+    }
+  }, [userChats, isChatFecthing]);
 
   if (
     loading &&
@@ -230,77 +257,109 @@ export const DashboardPage = () => {
           <p className="text-gray-500">What&apos;s happening in your society</p>
         </div>
       ) : (
-        <div className="relative w-full h-auto">
-          {(userChats.length === 0 && !isChatFecthing) ?
-            <div className={`flex flex-col items-center justify-center gap-18 w-full min-h-[80dvh] h-full`}>
-              <div className="flex flex-col justify-center items-center">
-                <h1 className="text-4xl tracking-wide font-semibold text-gray-900 dark:text-white">
-                  Welcome, {user?.name.split(" ")[0]}!
+
+        // NEEDS TO BE CHANGED
+
+        <div className="relative flex flex-col w-full max-w-4xl mx-auto min-h-[80dvh]">
+
+          {/* Session Header */}
+          {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
+            <div className="absolute top-0 w-full z-20 mb-6">
+              <div className="flex items-center gap-2 p-2 bg-white/5 backdrop-blur-2xl rounded-lg">
+                <button
+                  onClick={createNewChatSession}
+                  className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
+                >
+                  <PlusIcon size={22} className="text-white" />
+                </button>
+
+                <div
+                  ref={sessionsContainerRef}
+                  className="flex-1 flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+                >
+                  {isSessionFecthing ? (
+                    Array.from({ length: 5 }).map((_, idx) => (
+                      <div
+                        key={idx}
+                        className="shrink-0 w-28 h-10 rounded-lg bg-white/20 animate-pulse"
+                      />
+                    ))
+                  ) : (
+                    [...sessions].reverse().map((s) => (
+                      <button
+                        key={s._id}
+                        onClick={() => handleSessionClick(s._id)}
+                        className={`shrink-0 cursor-pointer px-4 py-2 rounded-lg whitespace-nowrap transition-colors
+                  ${currentSessionId === s._id
+                            ? "bg-red-400 text-white"
+                            : "bg-white/10 text-white hover:bg-white/20"
+                          }`}
+                      >
+                        {s.title}
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Chat Area */}
+          <div
+            ref={chatContainerRef}
+            className="flex-1 flex flex-col gap-4 overflow-y-auto pb-6 scroll-smooth">
+
+            {/* Loading State */}
+            {isChatFecthing && (
+              <div className="flex flex-col gap-4">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="w-full h-32 rounded-xl bg-white/10 animate-pulse"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!isChatFecthing && userChats.length === 0 && (
+              <div className="flex flex-1 flex-col items-center justify-center text-center">
+                <h1 className="text-4xl font-semibold text-gray-900 dark:text-white">
+                  Welcome, {user?.name?.split(" ")[0]}!
                 </h1>
-                <p className="dark:text-white/50 text-lg">
+
+                <p className="mt-2 text-lg dark:text-white/50">
                   What&apos;s happening in your society?
                 </p>
               </div>
-              <ChatInput currentSessionId={currentSessionId} />
-            </div>
-            :
-            <div className={`relative flex flex-col items-end gap-10 w-full max-w-4xl mx-auto h-full min-h-[80dvh]`}>
+            )}
 
-              {/* session header */}
-              {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
-                <div className="sticky top-0 z-10 w-full">
-                  <div className="flex items-center gap-2 p-2 bg-white/5 backdrop-blur-sm rounded-lg">
-                    <button
-                      onClick={() => createNewChatSession()}
-                      className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
-                    >
-                      <PlusIcon size={22} className="text-white" />
-                    </button>
+            {/* Messages */}
+            {!isChatFecthing &&
+              userChats.length > 0 &&
+              userChats.map((m: any) => (
+                <ComplaintCard
+                  key={m._id || m.complaint?._id}
+                  title={m.complaint.title}
+                  description={m.complaint.description}
+                  image={m.complaint.image}
+                  category={m.complaint.category}
+                  createdAt={m.complaint.createdAt}
+                  status={m.complaint.status}
+                  priority={m.complaint.priority}
+                />
+              ))}
+          </div>
 
-                    <div ref={sessionsContainerRef} className="flex-1 flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-                      {!isSessionFecthing ? (
-                        [...sessions].reverse().map((s) => (
-                          <button
-                            key={s._id}
-                            onClick={() => handleSessionClick(s._id)}
-                            className={`shrink-0 cursor-pointer px-4 py-2 rounded-lg whitespace-nowrap transition-colors
-                          ${currentSessionId === s._id
-                                ? "bg-red-400 text-white"
-                                : "bg-white/10 text-white hover:bg-white/20"
-                              }`}
-                          >
-                            {s.title}
-                          </button>
-                        ))
-                      ) : (
-                        sessions.map((_, idx) => (
-                          <div
-                            key={idx}
-                            className="shrink-0 w-28 h-10 rounded-lg bg-white/20 animate-pulse"
-                          />
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Chat Area */}
-              <div className="w-full flex flex-col items-end gap-4">
-                {
-                  (userChats.length > 0 && !isChatFecthing) && userChats.map((m: any) => (
-                    <ComplaintCard title={m.complaint.title} description={m.complaint.description} image={m.complaint.image} category={m.complaint.category} createdAt={m.complaint.createdAt} status={m.complaint.status} priority={m.complaint.priority} />
-                  ))
-                }
-              </div>
-
-              {/* Input */}
-              <div className="w-full h-full sticky bottom-0 z-10">
-                <ChatInput currentSessionId={currentSessionId} />
-              </div>
-            </div>
-          }
-        </ div >
+          {/* Input */}
+          <div className="sticky bottom-0 z-20 pt-4 bg-transparent">
+            <ChatInput
+              fecthSessions={fecthSessions}
+              fetchCurrentSessionChats={fetchCurrentSessionChats}
+              currentSessionId={currentSessionId} />
+          </div>
+        </div>
+        // NEEDS TO BE CHANGED
       )}
 
 

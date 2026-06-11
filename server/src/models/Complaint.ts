@@ -57,7 +57,7 @@ const complaintSchema = new Schema<IComplaint>(
     },
     priority: {
       type: String,
-      enum: ['low', 'medium', 'high', 'urgent'],
+      enum: ['low', 'medium', 'high', 'urgent', 'critical'],
       default: 'medium',
     },
     status: {

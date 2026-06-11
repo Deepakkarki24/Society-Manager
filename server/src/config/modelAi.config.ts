@@ -5,24 +5,28 @@ import {
 } from '@google/genai';
 import { GOOGLE_API_KEY } from './env';
 
-export const runGoogleGeminiModel = async (systemInstruction: string, message: string) => {
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+export const runGoogleGeminiModel = async (
+  systemInstruction: string,
+  message: string
+) => {
+
   try {
+
 
     const ai = new GoogleGenAI({
       apiKey: GOOGLE_API_KEY,
     });
-    const tools = [
-      {
-        googleSearch: {
-        }
-      },
-    ];
+
     const config = {
       systemInstruction,
       thinkingConfig: {
         thinkingLevel: ThinkingLevel.MINIMAL,
       },
-      responseMimeType: 'application/json',
+      responseMimeType: "application/json",
       responseSchema: {
         type: Type.OBJECT,
         required: ["title", "description", "category", "priority"],
@@ -42,10 +46,12 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
         },
       },
     };
-    const model = 'gemini-3.5-flash';
+
+    const model = "gemini-3.5-flash";
+
     const contents = [
       {
-        role: 'user',
+        role: "user",
         parts: [
           {
             text: message,
@@ -54,29 +60,64 @@ export const runGoogleGeminiModel = async (systemInstruction: string, message: s
       },
     ];
 
-    console.log("Using model:", model);
+    const maxRetries = 4;
 
-    const response = await ai.models.generateContent({
-      model,
-      config,
-      contents,
-    });
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(
+          `Gemini Request Attempt ${attempt}/${maxRetries}`
+        );
 
-    console.log("got response in model config", response)
+        const response = await ai.models.generateContent({
+          model,
+          config,
+          contents,
+        });
 
-    const finalResult = JSON.parse(response.text || "");
+        const finalResult = JSON.parse(response.text || "{}");
 
-    return {
-      success: true,
-      data: finalResult,
-      message: "AI json complaint generated",
-      service: "google",
-      err: ""
-    };
+        return {
+          success: true,
+          data: finalResult,
+          message: "AI json complaint generated",
+          service: "google",
+          err: "",
+        };
+      } catch (err: any) {
+        const status = err?.status;
 
+        console.error(
+          `Attempt ${attempt} failed with status:`,
+          status
+        );
+
+        // Don't retry client errors
+        if (
+          status === 400 ||
+          status === 401 ||
+          status === 403 ||
+          status === 404
+        ) {
+          throw err;
+        }
+
+        // Last attempt
+        if (attempt === maxRetries) {
+          throw err;
+        }
+
+        // Exponential backoff
+        const delay = Math.pow(2, attempt) * 1000;
+
+        console.log(
+          `Retrying in ${delay}ms...`
+        );
+
+        await sleep(delay);
+      }
+    }
   } catch (err: any) {
-    console.error(JSON.stringify(err, null, 2));
-    throw err;
+    console.log(err)
   }
 }
 

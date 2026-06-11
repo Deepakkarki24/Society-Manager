@@ -7,9 +7,11 @@ import { SpinnerGapIcon } from "@phosphor-icons/react";
 
 interface ChatInputInterface {
   currentSessionId: string | null
+  fecthSessions: () => void
+  fetchCurrentSessionChats: (params: { sessionId: string; }) => void
 }
 
-const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId }) => {
+const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessions, fetchCurrentSessionChats }) => {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [isloading, setIsLoading] = useState(false);
@@ -25,6 +27,8 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId }) => {
       const res = await generateComplaint(message, image, currentSessionId)
       if (res.success) {
         toast.success("Complaint generated!");
+        fecthSessions()
+        fetchCurrentSessionChats({ sessionId: currentSessionId })
       } else if (!res.success) {
         toast.error("Unfortunately your complaint not submitted! Try again after sometime!");
       }

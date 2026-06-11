@@ -28,7 +28,7 @@ export const DashboardLayout = () => {
       )}
       <div className="flex flex-1 flex-col h-full">
         <Header onMenuClick={() => setMobileOpen(true)} />
-        <main className="flex-1 p-4 lg:p-6 max-h-[90dvh] h-full overflow-y-auto">
+        <main className="flex flex-1 p-4 lg:p-6 max-h-[90dvh] h-full overflow-y-auto">
           <Outlet />
         </main>
       </div>

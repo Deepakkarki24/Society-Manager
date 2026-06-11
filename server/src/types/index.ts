@@ -21,7 +21,7 @@ export type ComplaintCategory =
   | 'maintenance'
   | 'other';
 
-export type ComplaintPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type ComplaintPriority = 'low' | 'medium' | 'high' | 'urgent' | 'critical';
 
 export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'partial';
 

@@ -12,7 +12,7 @@ Rules:
 - Preserve the complaint description exactly as provided, without any modifications.
 - Do not translate the complaint.
 - Select category from: water, electricity, lift, security, parking, cleaning, maintenance, other
-- Select priority from: low, medium, high, critical
+- Select priority from: low, medium, high, critical, urgent
 - Infer category and priority from the complaint context.
 
 Output:

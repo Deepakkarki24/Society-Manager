@@ -63,6 +63,8 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
     let imageBase64
     if (image) {
       imageBase64 = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+
+      console.log("image convetred in base64")
     }
 
     const complaint = await Complaint.create({
@@ -74,6 +76,8 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
       createdBy: req.user!._id,
       image: imageBase64
     });
+
+    console.log("complaint created!")
 
     await Chat.create({
       sessionId,
@@ -91,6 +95,16 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
       //   createdAt: complaint.createdAt
       // }
     })
+
+    console.log("chat created!")
+
+    await ChatSession.findByIdAndUpdate(
+      sessionId,
+      { title },
+      { new: true }
+    );
+
+    console.log("chat session updated!")
 
     const populated = await Complaint.findById(complaint._id)
       .populate("createdBy", "name email flatNumber")
@@ -118,7 +132,7 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
 
     return successResponse(res, 201, "Complaint generated!", { data: populated });
   } catch (err: any) {
-    return errorResponse(res, 500, err)
+    return errorResponse(res, 503, err)
   }
 };
 
