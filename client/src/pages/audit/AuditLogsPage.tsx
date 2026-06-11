@@ -18,7 +18,7 @@ export const AuditLogsPage = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <h1 className="text-2xl font-bold dark:text-white">Audit Logs</h1>
       <Card>
         <table className="w-full text-sm">

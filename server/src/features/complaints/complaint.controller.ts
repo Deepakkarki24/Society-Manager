@@ -98,10 +98,17 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
 
     console.log("chat created!")
 
-    await ChatSession.findByIdAndUpdate(
-      sessionId,
-      { title },
-      { new: true }
+    await ChatSession.findOneAndUpdate(
+      {
+        _id: sessionId,
+        title: "New Chat", // only update if current title is still "New Chat"
+      },
+      {
+        $set: { title },
+      },
+      {
+        new: true,
+      }
     );
 
     console.log("chat session updated!")

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { User } from "@/types";
 import api from "@/api-manager/apiInterceptor";
+import { currentSessionKey } from "@/utils/localStorageKeys";
 
 interface AuthState {
   user: User | null;
@@ -80,6 +81,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       localStorage.removeItem("user");
+      localStorage.removeItem(currentSessionKey)
     },
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;

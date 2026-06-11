@@ -19,19 +19,31 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
         critical: "bg-red-100 text-red-700",
     };
 
+    const date = new Date(createdAt);
+
+    const formatted = date.toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    });
+
     return (
-        <div className="w-full max-w-100 rounded-2xl border border-white/5 bg-white/5 backdrop:blur-sm p-5 shadow-sm transition hover:shadow-md">
+        <div className="w-full sm:max-w-100 max-w-60  rounded-2xl border border-white/5 bg-white/5 backdrop:blur-sm p-5 shadow-sm transition hover:shadow-md">
             {/* Header */}
             {image &&
-                <div className="w-full h-auto rounded-lg overflow-hidden mb-4">
+                <div className="w-auto aspect-video object-contain rounded-lg overflow-hidden mb-4">
                     <img className="w-full object-cover aspect-auto" src={image} alt="image" />
                 </div>
             }
             <div className="flex items-start justify-between gap-4">
                 <div>
-                    <h3 className="text-lg font-semibold text-white">{title}</h3>
+                    <h3 className="sm:text-lg text-base font-semibold text-white">{title}</h3>
                     <p className="mt-1 text-sm text-gray-500">
-                        {createdAt}
+                        {formatted}
                     </p>
                 </div>
 
@@ -44,7 +56,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
             </div>
 
             {/* Description */}
-            <p className="mt-4 line-clamp-3 text-sm leading-6 text-gray-600">
+            <p className="mt-4 line-clamp-3 text-sm sm:leading-6 text-white/40">
                 {description}
             </p>
 

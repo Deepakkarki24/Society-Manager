@@ -17,11 +17,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       )}
       <select
         ref={ref}
-        className={`w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white ${className}`}
+        className={`w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-white/80 dark:bg-white/5 dark:text-white ${className}`}
         {...props}
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option className='bg-transparent text-black' key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}

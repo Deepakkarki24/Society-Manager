@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 import { Building2 } from 'lucide-react';
+import loginPageImage from '@/assets/images/login-img.png'
 
 interface LoginForm {
   email: string;
@@ -29,20 +30,28 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <div className="hidden flex-1 items-center justify-center bg-primary-600 lg:flex">
+    <div className="relative flex h-dvh">
+      <img className='absolute top-0 left-0 -z-2 w-full h-full object-cover brightness-30' src={loginPageImage} alt="image" />
+      <div className="hidden flex-1 items-center justify-center backdrop-blur-lg lg:flex">
         <div className="max-w-md px-8 text-white">
-          <Building2 className="mb-6 h-16 w-16" />
-          <h1 className="text-4xl font-bold">SIMP</h1>
-          <p className="mt-4 text-lg text-primary-100">
-            Society Management Platform — structured complaints, maintenance, announcements, and resident communication.
+          <div className='flex gap-2 items-center justify-start w-fit'>
+            <Building2 className="h-16 w-16" />
+            <h1 className="text-4xl font-bold">SIMP</h1>
+          </div>
+          <p className="mt-4 text-xl tracking-wider text-primary-100">
+            <span className='font-semibold'>Society Issues Management Platform</span>
+          </p>
+          <p className="mt-4 text-lg italic tracking-wider text-primary-100">
+            AI-powered complaints, maintenance, announcements, and resident management.
           </p>
         </div>
       </div>
-      <div className="flex flex-1 items-center justify-center p-8">
+      <div className="relative flex flex-1 items-center justify-center p-8">
+        {/* dark overlay */}
+        {/* <div className='w-full h-full absolute bg-black/70 -z-2 top-0 right-0' /> */}
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sign in</h2>
-          <p className="mt-1 text-sm text-gray-500">Enter your credentials to access your account</p>
+          <p className="mt-1 text-sm text-white/80 font-semibold">Enter your credentials to access your account</p>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
             <Input
               label="Email"
@@ -60,9 +69,9 @@ export const LoginPage = () => {
               Sign in
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm font-semibold text-white/80">
             Don&apos;t have an account?{' '}
-            <Link to="/register" className="font-medium text-primary-600 hover:underline">
+            <Link to="/register" className="font-semibold text-primary-500 hover:underline">
               Register
             </Link>
           </p>

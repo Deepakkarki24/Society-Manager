@@ -51,7 +51,7 @@ export const SettingsPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="w-full mx-auto max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold dark:text-white">Settings</h1>
 
       <Card title="Appearance">

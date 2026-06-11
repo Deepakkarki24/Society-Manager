@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -42,10 +42,14 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const filtered = navItems.filter((item) => item.roles.includes(role));
 
+  const navigate = useNavigate()
+
   return (
     <aside className={`hidden lg:block w-64 shrink-0 border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900`}>
-      <div className="flex h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
-        <span className="text-xl font-bold text-primary-600">SIMP</span>
+      <div onClick={() => navigate('/')}
+        className="w-fit flex cursor-pointer gap-1 text-primary-600 h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
+        <Building2 className="h-8 w-8" />
+        <span className="text-xl font-bold">SIMP</span>
       </div>
       <nav className="space-y-1 p-4">
         {filtered.map(({ to, icon: Icon, label, type }) => (

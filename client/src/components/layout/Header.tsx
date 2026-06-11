@@ -1,4 +1,4 @@
-import { Bell, Menu, LogOut } from "lucide-react";
+import { Bell, Menu, LogOut, Building2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,8 @@ export const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="text-lg font-semibold lg:hidden text-primary-600">
+        <span className="text-lg flex items-center gap-1 font-semibold lg:hidden text-primary-600">
+          <Building2 className="h-8 w-8" />
           SIMP
         </span>
       </div>
@@ -39,7 +40,7 @@ export const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
             </span>
           )}
         </button>
-        <div className="ml-2 hidden items-center gap-2 sm:flex">
+        <div className="ml-2 items-center gap-2 flex">
           <div className="text-right">
             <p className="text-sm font-medium dark:text-white">{user?.name}</p>
             <p className="text-xs capitalize text-gray-500">

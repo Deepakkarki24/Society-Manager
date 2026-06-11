@@ -4,6 +4,7 @@ import {
   Type,
 } from '@google/genai';
 import { GOOGLE_API_KEY } from './env';
+import { gemini2Dot5Flash, gemini3Dot5Flash } from './geminiModels';
 
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -23,9 +24,9 @@ export const runGoogleGeminiModel = async (
 
     const config = {
       systemInstruction,
-      thinkingConfig: {
-        thinkingLevel: ThinkingLevel.MINIMAL,
-      },
+      // thinkingConfig: {
+      //   thinkingLevel: ThinkingLevel.MINIMAL,
+      // },
       responseMimeType: "application/json",
       responseSchema: {
         type: Type.OBJECT,
@@ -47,7 +48,7 @@ export const runGoogleGeminiModel = async (
       },
     };
 
-    const model = "gemini-3.5-flash";
+    const model = gemini2Dot5Flash;
 
     const contents = [
       {
@@ -60,7 +61,7 @@ export const runGoogleGeminiModel = async (
       },
     ];
 
-    const maxRetries = 4;
+    const maxRetries = 2;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -91,12 +92,13 @@ export const runGoogleGeminiModel = async (
           status
         );
 
-        // Don't retry client errors
+        // Don't retry client errors except 429 limit exceeded
         if (
           status === 400 ||
           status === 401 ||
           status === 403 ||
-          status === 404
+          status === 404 ||
+          status === 429
         ) {
           throw err;
         }

@@ -61,7 +61,7 @@ export const ComplaintDetailPage = () => {
     typeof complaint.createdBy === 'object' ? complaint.createdBy : null;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="w-full mx-auto max-w-3xl space-y-6">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold dark:text-white">{complaint.title}</h1>

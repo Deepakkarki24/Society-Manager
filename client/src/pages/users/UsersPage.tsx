@@ -27,7 +27,7 @@ export const UsersPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold dark:text-white">Users</h1>
         <Button onClick={() => setModalOpen(true)}>Add User</Button>

@@ -26,7 +26,7 @@ export const NotificationsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold dark:text-white">Notifications</h1>
         <Button variant="secondary" onClick={markAllRead}>Mark all read</Button>

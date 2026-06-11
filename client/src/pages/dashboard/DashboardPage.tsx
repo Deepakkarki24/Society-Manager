@@ -54,7 +54,7 @@ export const DashboardPage = () => {
   const [isSessionFecthing, setIsSessionFetching] = useState(false)
   const [isChatFecthing, setIsChatFetching] = useState(true)
   const [userChats, setUserChats] = useState<ComplaintCardProps[]>([])
-  const [chatsRole, setChatRole] = useState<"user" | "ai" | null>(null)
+  // const [chatsRole, setChatRole] = useState<"user" | "ai" | null>(null)
   const [currentSessionId, setCurrentSessionId] =
     useState<string | null>(
       localStorage.getItem(currentSessionKey)
@@ -260,7 +260,7 @@ export const DashboardPage = () => {
 
         // NEEDS TO BE CHANGED
 
-        <div className="relative flex flex-col w-full max-w-4xl mx-auto min-h-[80dvh]">
+        <div className="relative flex flex-col w-full max-sm:h-dvh min-h-[80dvh] max-w-4xl mx-auto">
 
           {/* Session Header */}
           {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
@@ -307,7 +307,7 @@ export const DashboardPage = () => {
           {/* Chat Area */}
           <div
             ref={chatContainerRef}
-            className="flex-1 flex flex-col gap-4 overflow-y-auto pb-6 scroll-smooth">
+            className="flex-1 flex flex-col gap-4 pt-18 overflow-y-auto sm:pb-6 sm:pt-20 scroll-smooth">
 
             {/* Loading State */}
             {isChatFecthing && (
