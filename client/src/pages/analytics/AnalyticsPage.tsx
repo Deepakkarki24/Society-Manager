@@ -53,7 +53,7 @@ export const AnalyticsPage = () => {
   if (user?.role !== 'super_admin' && dashboard) {
     return (
       <div className="w-full space-y-6">
-        <h1 className="text-2xl font-bold dark:text-white">Society Analytics</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Society Analytics</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard title="Total Complaints" value={dashboard.complaints.total} icon={MessageSquareWarning} color="blue" />
           <StatCard title="Resolved" value={dashboard.complaints.resolved} icon={CheckCircle} color="green" />
@@ -68,7 +68,7 @@ export const AnalyticsPage = () => {
 
   return (
     <div className="space-y-6 w-full">
-      <h1 className="text-2xl font-bold dark:text-white">Platform Analytics</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Platform Analytics</h1>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Societies by City">
           <ul className="space-y-2">

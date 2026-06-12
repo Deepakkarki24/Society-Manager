@@ -34,13 +34,13 @@ export const ComplaintsPage = () => {
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold dark:text-white">Complaints</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Complaints</h1>
       </div>
 
       <Card>
         <div className="mb-4 grid gap-4 sm:grid-cols-3">
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-text-muted" />
             <Input
               placeholder="Search..."
               className="pl-10"
@@ -79,8 +79,8 @@ export const ComplaintsPage = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="pb-3 font-medium">Title</th>
+                <tr className="border-b border-border-subtle">
+                  <th className="pb-3 pl-3 font-medium">Title</th>
                   <th className="pb-3 font-medium">Category</th>
                   <th className="pb-3 font-medium">Priority</th>
                   <th className="pb-3 font-medium">Status</th>
@@ -91,12 +91,12 @@ export const ComplaintsPage = () => {
                 {complaints && complaints.map((c) => (
                   <tr
                     key={c._id}
-                    className="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
+                    className="border-b border-border-subtle transition hover:bg-surface-hover"
                   >
-                    <td className="py-3">
+                    <td className="py-3 pl-3">
                       <Link
                         to={`/complaints/${c._id}`}
-                        className="font-medium text-primary-600 hover:underline"
+                        className="font-medium text-primary-400 hover:text-primary-300 hover:underline"
                       >
                         {c.title}
                       </Link>
@@ -106,7 +106,7 @@ export const ComplaintsPage = () => {
                     <td className="py-3">
                       <Badge status={c.status} />
                     </td>
-                    <td className="py-3 text-gray-500">
+                    <td className="py-3 text-text-muted">
                       {new Date(c.createdAt).toLocaleDateString()}
                     </td>
                   </tr>

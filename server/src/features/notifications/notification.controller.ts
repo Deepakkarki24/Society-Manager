@@ -46,46 +46,46 @@ export const getNotifications = async (
   }
 };
 
-// export const markAsRead = async (
-//   req: AuthRequest,
-//   res: Response,
-// ) => {
-//   try {
-//     const notification = await Notification.findOneAndUpdate(
-//       {
-//         _id: req.params.id,
-//         recipient: req.user!._id,
-//       },
-//       {
-//         isRead: true,
-//       },
-//       {
-//         new: true,
-//       },
-//     );
+export const markAsRead = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        recipient: req.user!._id,
+      },
+      {
+        isRead: true,
+      },
+      {
+        new: true,
+      },
+    );
 
-//     if (!notification) {
-//       return errorResponse(
-//         res,
-//         404,
-//         "Notification not found",
-//       );
-//     }
+    if (!notification) {
+      return errorResponse(
+        res,
+        404,
+        "Notification not found",
+      );
+    }
 
-//     return successResponse(
-//       res,
-//       200,
-//       "Notification marked as read",
-//       notification,
-//     );
-//   } catch (err: any) {
-//     return errorResponse(
-//       res,
-//       500,
-//       err.message || "Failed to update notification",
-//     );
-//   }
-// };
+    return successResponse(
+      res,
+      200,
+      "Notification marked as read",
+      notification,
+    );
+  } catch (err: any) {
+    return errorResponse(
+      res,
+      500,
+      err.message || "Failed to update notification",
+    );
+  }
+};
 
 export const markAllAsRead = async (
   req: AuthRequest,

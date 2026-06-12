@@ -36,7 +36,7 @@ export const AnnouncementsPage = () => {
   return (
     <div className="w-full space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold dark:text-white">Announcements</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Announcements</h1>
         {user?.role === 'society_admin' && (
           <Button onClick={() => setModalOpen(true)}>Create Announcement</Button>
         )}
@@ -52,9 +52,9 @@ export const AnnouncementsPage = () => {
                 {a.isImportant && <Badge status="pending" label="Important" />}
                 {a.isEvent && <Badge status="assigned" label="Event" />}
               </div>
-              <h3 className="font-semibold dark:text-white">{a.title}</h3>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">{a.content}</p>
-              <p className="mt-3 text-xs text-gray-500">{new Date(a.createdAt).toLocaleDateString()}</p>
+              <h3 className="font-semibold text-text-primary">{a.title}</h3>
+              <p className="mt-2 text-sm text-text-secondary line-clamp-3">{a.content}</p>
+              <p className="mt-3 text-xs text-text-muted">{new Date(a.createdAt).toLocaleDateString()}</p>
             </Card>
           ))}
         </div>

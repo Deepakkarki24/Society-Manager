@@ -27,7 +27,24 @@ const HomeRedirect = () => {
 function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: '#151d30',
+            color: '#f0f6ff',
+            border: '1px solid rgba(0, 198, 255, 0.15)',
+            borderRadius: '12px',
+            boxShadow: '0 4px 24px rgba(0, 114, 255, 0.12)',
+          },
+          success: {
+            iconTheme: { primary: '#00c6ff', secondary: '#151d30' },
+          },
+          error: {
+            iconTheme: { primary: '#ef4444', secondary: '#151d30' },
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<HomeRedirect />} />
         <Route path="/login" element={<LoginPage />} />

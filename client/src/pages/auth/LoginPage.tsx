@@ -31,27 +31,26 @@ export const LoginPage = () => {
 
   return (
     <div className="relative flex h-dvh">
-      <img className='absolute top-0 left-0 -z-2 w-full h-full object-cover brightness-30' src={loginPageImage} alt="image" />
-      <div className="hidden flex-1 items-center justify-center backdrop-blur-lg lg:flex">
-        <div className="max-w-md px-8 text-white">
-          <div className='flex gap-2 items-center justify-start w-fit'>
-            <Building2 className="h-16 w-16" />
-            <h1 className="text-4xl font-bold">SIMP</h1>
+      <img className='absolute top-0 left-0 -z-2 w-full h-full object-cover brightness-[0.60]' src={loginPageImage} alt="image" />
+      <div className="absolute inset-0 -z-1 backdrop-blur-sm bg-linear-to-br from-surface/80 via-surface/60 to-primary-900/40" />
+      <div className="hidden flex-1 items-center justify-center lg:flex">
+        <div className="max-w-md px-8">
+          <div className='flex gap-3 items-center justify-start w-fit'>
+            <Building2 className="h-16 w-16 text-primary-400" />
+            <h1 className="text-4xl font-bold text-gradient-primary">SIMP</h1>
           </div>
-          <p className="mt-4 text-xl tracking-wider text-primary-100">
+          <p className="mt-4 text-xl tracking-wide text-primary-200">
             <span className='font-semibold'>Society Issues Management Platform</span>
           </p>
-          <p className="mt-4 text-lg italic tracking-wider text-primary-100">
+          <p className="mt-4 text-lg text-text-secondary">
             AI-powered complaints, maintenance, announcements, and resident management.
           </p>
         </div>
       </div>
       <div className="relative flex flex-1 items-center justify-center p-8">
-        {/* dark overlay */}
-        {/* <div className='w-full h-full absolute bg-black/70 -z-2 top-0 right-0' /> */}
-        <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Sign in</h2>
-          <p className="mt-1 text-sm text-white/80 font-semibold">Enter your credentials to access your account</p>
+        <div className="w-full max-w-md glass-strong rounded-2xl p-8 ai-glow">
+          <h2 className="text-2xl font-bold text-text-primary">Sign in</h2>
+          <p className="mt-1 text-sm text-text-secondary">Enter your credentials to access your account</p>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
             <Input
               label="Email"
@@ -69,9 +68,9 @@ export const LoginPage = () => {
               Sign in
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm font-semibold text-white/80">
+          <p className="mt-6 text-center text-sm text-text-secondary">
             Don&apos;t have an account?{' '}
-            <Link to="/register" className="font-semibold text-primary-500 hover:underline">
+            <Link to="/register" className="font-semibold text-primary-400 hover:text-primary-300 hover:underline">
               Register
             </Link>
           </p>

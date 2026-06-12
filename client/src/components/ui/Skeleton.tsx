@@ -1,5 +1,5 @@
 export const Skeleton = ({ className = '' }: { className?: string }) => (
-  <div className={`animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800 ${className}`} />
+  <div className={`animate-pulse rounded-lg bg-surface-hover ${className}`} />
 );
 
 export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
@@ -11,7 +11,7 @@ export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
 );
 
 export const CardSkeleton = () => (
-  <div className="rounded-xl border border-gray-200 p-6 dark:border-gray-800">
+  <div className="rounded-xl border border-border-subtle p-6">
     <Skeleton className="mb-4 h-6 w-1/3" />
     <Skeleton className="mb-2 h-4 w-full" />
     <Skeleton className="h-4 w-2/3" />

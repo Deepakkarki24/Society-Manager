@@ -28,24 +28,24 @@ export const runGoogleGeminiModel = async (
       //   thinkingLevel: ThinkingLevel.MINIMAL,
       // },
       responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        required: ["title", "description", "category", "priority"],
-        properties: {
-          title: {
-            type: Type.STRING,
-          },
-          description: {
-            type: Type.STRING,
-          },
-          category: {
-            type: Type.STRING,
-          },
-          priority: {
-            type: Type.STRING,
-          },
-        },
-      },
+      // responseSchema: {
+      //   type: Type.OBJECT,
+      //   required: ["title", "description", "category", "priority"],
+      //   properties: {
+      //     title: {
+      //       type: Type.STRING,
+      //     },
+      //     description: {
+      //       type: Type.STRING,
+      //     },
+      //     category: {
+      //       type: Type.STRING,
+      //     },
+      //     priority: {
+      //       type: Type.STRING,
+      //     },
+      //   },
+      // },
     };
 
     const model = gemini2Dot5Flash;

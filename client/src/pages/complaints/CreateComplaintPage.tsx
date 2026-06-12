@@ -43,7 +43,7 @@ export const CreateComplaintPage = () => {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold dark:text-white">Raise a Complaint</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Raise a Complaint</h1>
       <Card>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input label="Title" {...register("title", { required: true })} />
@@ -62,7 +62,7 @@ export const CreateComplaintPage = () => {
             {...register("priority")}
           />
           <div>
-            <label className="mb-1 block text-sm font-medium">
+            <label className="mb-1.5 block text-sm font-medium text-text-secondary">
               Attachments (images)
             </label>
             <input

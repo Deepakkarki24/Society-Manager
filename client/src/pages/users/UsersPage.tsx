@@ -29,14 +29,14 @@ export const UsersPage = () => {
   return (
     <div className="w-full space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold dark:text-white">Users</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Users</h1>
         <Button onClick={() => setModalOpen(true)}>Add User</Button>
       </div>
 
       <Card>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b dark:border-gray-700">
+            <tr className="border-b border-border-subtle">
               <th className="pb-3 text-left">Name</th>
               <th className="pb-3 text-left">Email</th>
               <th className="pb-3 text-left">Role</th>
@@ -45,7 +45,7 @@ export const UsersPage = () => {
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} className="border-b dark:border-gray-800">
+              <tr key={u._id} className="border-b border-border-subtle transition hover:bg-surface-hover">
                 <td className="py-3">{u.name}</td>
                 <td className="py-3">{u.email}</td>
                 <td className="py-3"><Badge status="assigned" label={u.role.replace('_', ' ')} /></td>

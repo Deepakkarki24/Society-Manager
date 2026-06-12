@@ -31,9 +31,14 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
         fecthSessions()
         fetchCurrentSessionChats({ sessionId: currentSessionId })
       } else if (!res.success) {
-        toast.error("Unfortunately your complaint not submitted! Try again after sometime!");
+        if (!res.error.isComplaint) {
+          toast.error(res?.message as string);
+        } else {
+          toast.error("Unfortunately your complaint not submitted! Try again after sometime!");
+        }
       }
     } catch (err) {
+      console.log(err)
       toast.error("Unfortunately your complaint not submitted! Try again after sometime");
       console.log("failed in catch block")
     } finally {
@@ -83,13 +88,20 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
     <div className="relative w-full max-w-4xl mx-auto">
       {previewImage &&
         <div className="absolute -top-25 left-2 w-22 aspect-square rounded-lg overflow-hidden">
-          <div className="relative w-full h-full bg-red-600">
+          <div className="relative w-full h-full ring-2 ring-primary-400/30 rounded-lg">
             <img src={previewImage} alt="preview Image" className="object-cover w-full h-full" />
-            <XIcon onClick={() => setPreviewImage("")} className="text-white cursor-pointer absolute top-0 right-1" size={18} />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <XIcon onClick={() => setPreviewImage("")} className="text-white cursor-pointer absolute top-1 right-1 bg-red-500/80 rounded-full p-0.5" size={18} />
+              </TooltipTrigger>
+              <TooltipContent>
+                Remove
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       }
-      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-3xl p-2 border border-white/5 dark:bg-gray-900 shadow-sm`}>
+      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-2xl p-2 glass-strong ai-glow`}>
         {/* Upload Button */}
 
         <Tooltip>
@@ -97,7 +109,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-text-secondary transition hover:bg-primary-400/10 hover:text-primary-400 cursor-pointer"
             >
               <Paperclip size={20} />
             </button>
@@ -118,9 +130,9 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
           ref={textareaRef}
           rows={1}
           value={message}
-          placeholder="Describe your issues.."
+          placeholder="Report an issue or ask Society AI..."
           onChange={handleChange}
-          className="max-h-40 flex-1 py-4 resize-none bg-transparent outline-none text-lg"
+          className="max-h-40 flex-1 py-3 resize-none bg-transparent outline-none text-base text-text-primary placeholder:text-text-muted"
         />
 
         {/* Send Button */}
@@ -129,7 +141,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
             <button
               onClick={handleSend}
               disabled={!message.trim()}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-gradient-primary text-white shadow-md shadow-primary-600/30 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {
                 !isloading ? <Send size={18} /> :

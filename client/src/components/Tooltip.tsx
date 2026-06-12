@@ -1,8 +1,6 @@
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
-// import { cn } from "@/lib/utils"
-
 
 type Direction = "top" | "right" | "bottom" | "left"
 
@@ -52,7 +50,7 @@ function TooltipContent({
                 data-slot="tooltip-content"
                 side={direction}
                 sideOffset={sideOffset}
-                className={`bg-white/10 z-50 w-fit rounded-xl px-3 py-1.5 text-sm font-semibold shadow-lg shadow-black/50 backdrop-blur-sm ring-1 ring-white/10 pointer-events-none max-w-72`}
+                className={`z-50 w-fit rounded-lg border border-border-subtle bg-surface-elevated px-3 py-1.5 text-sm font-medium text-text-primary shadow-lg shadow-black/30 ${className ?? ''}`}
                 {...props}
             >
                 {children}
@@ -60,11 +58,11 @@ function TooltipContent({
                 {showArrow && (
                     <TooltipPrimitive.Arrow
                         style={{
-                            fill: "#171624",
-                            stroke: "rgba(0,0,0)",
-                            strokeWidth: 0,
+                            fill: "#111827",
+                            stroke: "rgba(0, 198, 255, 0.15)",
+                            strokeWidth: 1,
                         }}
-                        className={`bg-primary relative -z-1 fill-foreground fill-black text-primary-foreground size-2.5 rotate-0 rounded-xs ${direction === "left" ? "-top-0.5" : "top-1.5 -translate-y-1.5"}`}
+                        className={`size-2.5 ${direction === "left" ? "-top-0.5" : "top-1.5 -translate-y-1.5"}`}
                     />
                 )}
             </TooltipPrimitive.Content>

@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addNotification, fetchUnreadCount } from '@/store/slices/notificationSlice';
 import type { Notification } from '@/types';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001/';
 
 let socket: Socket | null = null;
 
@@ -16,7 +16,7 @@ export const useSocket = () => {
     if (!user) return;
 
     socket = io(SOCKET_URL, {
-      auth: { user },
+      withCredentials: true,
       query: { societyId: typeof user.society === 'string' ? user.society : user.society?._id },
     });
 

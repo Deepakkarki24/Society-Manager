@@ -35,8 +35,18 @@ const startServer = async () => {
   setSocketIO(io);
 
   io.use((socket, next) => {
-    const token = socket.handshake.auth?.token;
-    if (!token) return next(new Error("Authentication required"));
+    const cookies = socket.handshake.headers.cookie
+
+    if (!cookies) return next(new Error("Authentication required"));
+
+    const token = cookies
+      .split(";")
+      .find((c) => c.trim().startsWith("token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      return next(new Error("Authentication required"));
+    }
 
     try {
       const decoded = jwt.verify(token, JWT_SECRET!) as JwtPayload;

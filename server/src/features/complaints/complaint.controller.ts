@@ -56,6 +56,12 @@ export const createComplaint = async (req: AuthRequest, res: Response) => {
     console.log("got model response")
     if (!modelResponse) return errorResponse(res, 503, "AI service is temporarily busy. Please try again.")
 
+    console.log("modelResponse", modelResponse.data)
+
+    const { error, isComplaint } = modelResponse.data
+
+    if (error) return errorResponse(res, 400, error, { isComplaint })
+
     const { title, description, priority, category } = modelResponse.data
 
     console.log("modelResponse", modelResponse)

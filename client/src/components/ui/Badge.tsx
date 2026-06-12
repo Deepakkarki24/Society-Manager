@@ -1,16 +1,16 @@
 const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-  assigned: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  in_progress: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400',
-  resolved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  reopened: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-  paid: 'bg-green-100 text-green-800',
-  overdue: 'bg-red-100 text-red-800',
+  pending: 'bg-yellow-500/15 text-yellow-400 ring-1 ring-yellow-500/25',
+  assigned: 'bg-primary-400/15 text-primary-300 ring-1 ring-primary-400/25',
+  in_progress: 'bg-indigo-500/15 text-indigo-300 ring-1 ring-indigo-500/25',
+  resolved: 'bg-green-500/15 text-green-400 ring-1 ring-green-500/25',
+  reopened: 'bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/25',
+  paid: 'bg-green-500/15 text-green-400 ring-1 ring-green-500/25',
+  overdue: 'bg-red-500/15 text-red-400 ring-1 ring-red-500/25',
 };
 
 export const Badge = ({ status, label }: { status: string; label?: string }) => (
   <span
-    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${statusColors[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'}`}
+    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${statusColors[status] || 'bg-surface-hover text-text-secondary ring-1 ring-border-subtle'}`}
   >
     {label || status.replace('_', ' ')}
   </span>

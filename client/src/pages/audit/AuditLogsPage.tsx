@@ -19,11 +19,11 @@ export const AuditLogsPage = () => {
 
   return (
     <div className="w-full space-y-6">
-      <h1 className="text-2xl font-bold dark:text-white">Audit Logs</h1>
+      <h1 className="text-2xl font-bold text-text-primary">Audit Logs</h1>
       <Card>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b dark:border-gray-700">
+            <tr className="border-b border-border-subtle">
               <th className="pb-3 text-left">User</th>
               <th className="pb-3 text-left">Action</th>
               <th className="pb-3 text-left">Entity</th>
@@ -32,11 +32,11 @@ export const AuditLogsPage = () => {
           </thead>
           <tbody>
             {logs.map((log) => (
-              <tr key={log._id} className="border-b dark:border-gray-800">
+              <tr key={log._id} className="border-b border-border-subtle transition hover:bg-surface-hover">
                 <td className="py-3">{log.user?.name || '-'}</td>
                 <td className="py-3 capitalize">{log.action}</td>
                 <td className="py-3">{log.entity}</td>
-                <td className="py-3 text-gray-500">{new Date(log.createdAt).toLocaleString()}</td>
+                <td className="py-3 text-text-muted">{new Date(log.createdAt).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

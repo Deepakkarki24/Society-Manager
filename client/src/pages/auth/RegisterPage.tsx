@@ -53,27 +53,29 @@ export const RegisterPage = () => {
 
   return (
     <div className="relative flex items-center h-dvh justify-center">
-      <img className='absolute top-0 left-0 -z-2 w-full h-full object-cover brightness-30' src={loginPageImage} alt="image" />
-      <div className="flex items-center w-full h-full justify-center backdrop-blur-lg">
-        <div className="w-full max-w-md">
-          <h2 className="text-2xl font-bold dark:text-white">Create account</h2>
-          <p className="mt-1 text-sm text-white/80">Register as a resident</p>
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
+      <img className='absolute top-0 left-0 -z-2 w-full h-full object-cover brightness-[0.60]' src={loginPageImage} alt="image" />
+      <div className="absolute inset-0 -z-1 backdrop-blur-sm bg-linear-to-br from-surface/80 via-surface/60 to-primary-900/40" />
+      <div className="flex items-center w-full h-full justify-center p-8">
+        <div className="w-full max-w-md glass-strong rounded-2xl p-8 ai-glow">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Full Name"
               {...register("name", { required: true })}
               error={errors.name && "Required"}
             />
+
             <Input
               label="Email"
               type="email"
               {...register("email", { required: true })}
             />
+
             <Input
               label="Password"
               type="password"
               {...register("password", { required: true, minLength: 6 })}
             />
+
             <Select
               label="Society"
               options={[
@@ -82,21 +84,24 @@ export const RegisterPage = () => {
               ]}
               {...register("societyId", { required: true })}
             />
+
             <Input
               label="Flat Number"
               {...register("flatNumber", { required: true })}
             />
-            <Input label="Block" {...register("block")} />
-            <Button type="submit" loading={loading} className="w-full">
-              Register
-            </Button>
+
+            <Input
+              label="Block"
+              {...register("block")}
+            />
+
+            <div className="md:col-span-2">
+              <Button type="submit" loading={loading} className="w-full">
+                Register
+              </Button>
+            </div>
           </form>
-          <p className="mt-6 text-center text-sm text-white/80">
-            Already have an account?{" "}
-            <Link to="/login" className="text-primary-500 font-semibold hover:underline">
-              Sign in
-            </Link>
-          </p>
+          <p className="mt-6 text-center text-sm text-text-secondary"> Already have an account?{" "} <Link to="/login" className="text-primary-400 font-semibold hover:text-primary-300 hover:underline"> Sign in </Link> </p>
         </div>
       </div>
     </div>

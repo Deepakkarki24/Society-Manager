@@ -27,16 +27,16 @@ export const SocietiesPage = () => {
   return (
     <div className="w-full space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold dark:text-white">Societies</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Societies</h1>
         <Button onClick={() => setModalOpen(true)}>Add Society</Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {societies.map((s) => (
           <Card key={s._id}>
-            <h3 className="font-semibold dark:text-white">{s.name}</h3>
-            <p className="mt-1 text-sm text-gray-500">{s.city}, {s.state}</p>
-            <p className="text-sm text-gray-500">{s.totalFlats} flats · ₹{s.maintenanceAmount}/mo</p>
+            <h3 className="font-semibold text-text-primary">{s.name}</h3>
+            <p className="mt-1 text-sm text-text-muted">{s.city}, {s.state}</p>
+            <p className="text-sm text-text-muted">{s.totalFlats} flats · ₹{s.maintenanceAmount}/mo</p>
           </Card>
         ))}
       </div>

@@ -1,19 +1,15 @@
 import { useForm } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setTheme } from "@/store/slices/themeSlice";
+import { useAppSelector } from "@/store/hooks";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { Select } from "@/components/ui/Select";
 import toast from "react-hot-toast";
 import type { FamilyMember } from "@/types";
 import { useEffect, useState } from "react";
 import api from "@/api-manager/apiInterceptor";
 
 export const SettingsPage = () => {
-  const dispatch = useAppDispatch();
   const { user } = useAppSelector((s) => s.auth);
-  const { mode } = useAppSelector((s) => s.theme);
   const { register, handleSubmit } = useForm({
     defaultValues: { name: user?.name, phone: user?.phone || "" },
   });
@@ -52,21 +48,7 @@ export const SettingsPage = () => {
 
   return (
     <div className="w-full mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold dark:text-white">Settings</h1>
-
-      <Card title="Appearance">
-        <Select
-          label="Theme"
-          options={[
-            { value: "light", label: "Light" },
-            { value: "dark", label: "Dark" },
-          ]}
-          value={mode}
-          onChange={(e) =>
-            dispatch(setTheme(e.target.value as "light" | "dark"))
-          }
-        />
-      </Card>
+      <h1 className="text-2xl font-bold text-text-primary">Settings</h1>
 
       <Card title="Profile">
         <form onSubmit={handleSubmit(onProfile)} className="space-y-4">
@@ -83,9 +65,9 @@ export const SettingsPage = () => {
               {family.map((m) => (
                 <div
                   key={m._id}
-                  className="flex justify-between rounded bg-gray-50 p-2 dark:bg-gray-800"
+                  className="flex justify-between rounded-lg bg-surface-hover p-3 ring-1 ring-border-subtle"
                 >
-                  <span>
+                  <span className="text-text-primary">
                     {m.name} ({m.relation})
                   </span>
                 </div>

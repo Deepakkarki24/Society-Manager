@@ -64,10 +64,10 @@ export const ComplaintDetailPage = () => {
     <div className="w-full mx-auto max-w-3xl space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold dark:text-white">{complaint.title}</h1>
+          <h1 className="text-2xl font-bold text-text-primary">{complaint.title}</h1>
           <div className="mt-2 flex gap-2">
             <Badge status={complaint.status} />
-            <span className="text-sm capitalize text-gray-500">{complaint.category}</span>
+            <span className="text-sm capitalize text-text-muted">{complaint.category}</span>
           </div>
         </div>
         {user?.role === 'resident' && complaint.status === 'resolved' && (
@@ -76,7 +76,7 @@ export const ComplaintDetailPage = () => {
       </div>
 
       <Card title="Details">
-        <p className="text-gray-700 dark:text-gray-300">{complaint.description}</p>
+        <p className="text-text-secondary">{complaint.description}</p>
         {complaint.image && (
           <div className="mt-4 flex flex-wrap gap-2">
             <img src={complaint.image} alt="" className="h-24 rounded-lg object-cover" />
@@ -120,7 +120,7 @@ export const ComplaintDetailPage = () => {
       <Card title="Comments">
         <div className="mb-4 space-y-3">
           {complaint.comments?.map((c, i) => (
-            <div key={i} className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
+            <div key={i} className="rounded-lg bg-surface-hover p-3 ring-1 ring-border-subtle">
               <p className="text-sm font-medium">{c.user?.name}</p>
               <p className="text-sm">{c.text}</p>
             </div>
@@ -133,7 +133,7 @@ export const ComplaintDetailPage = () => {
       </Card>
 
       {createdBy && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-text-muted">
           Raised by {createdBy.name} · Flat {createdBy.flatNumber}
         </p>
       )}

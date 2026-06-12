@@ -14,12 +14,12 @@ export const Card = ({
   action,
 }: CardProps) => (
   <div
-    className={`rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 ${className}`}
+    className={`rounded-xl border border-border-subtle bg-surface-card p-6 shadow-sm shadow-black/20 ${className}`}
   >
     {(title || action) && (
       <div className="mb-4 flex items-center justify-between">
         {title && (
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-text-primary">
             {title}
           </h3>
         )}

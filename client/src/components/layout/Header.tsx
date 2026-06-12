@@ -1,55 +1,59 @@
 import { Bell, Menu, LogOut, Building2 } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logout } from "@/store/slices/authSlice";
+import { useAppSelector } from "@/store/hooks";
 import { useNavigate } from "react-router-dom";
+import type React from "react";
 
-export const Header = ({ onMenuClick }: { onMenuClick?: () => void }) => {
-  const dispatch = useAppDispatch();
+
+interface HeaderProps {
+  setShowLogoutModal: (val: boolean) => void;
+  onMenuClick?: () => void
+}
+
+
+export const Header: React.FC<HeaderProps> = ({ onMenuClick, setShowLogoutModal }) => {
   const navigate = useNavigate();
   const { user } = useAppSelector((s) => s.auth);
   const { unreadCount } = useAppSelector((s) => s.notifications);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
+
+
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-900 lg:px-6">
+    <header className="flex h-16 items-center justify-between border-b border-border-subtle bg-[#1F1F1F] backdrop-blur-md px-4 lg:px-6">
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
-          className="rounded-lg p-2 hover:bg-gray-100 lg:hidden dark:hover:bg-gray-800"
+          className="rounded-lg p-2 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary lg:hidden"
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="text-lg flex items-center gap-1 font-semibold lg:hidden text-primary-600">
-          <Building2 className="h-8 w-8" />
+        <span className="text-lg flex items-center gap-2 font-semibold lg:hidden text-gradient-primary">
+          <Building2 className="h-7 w-7 text-primary-400" />
           SIMP
         </span>
       </div>
       <div className="flex items-center gap-2">
         <button
           onClick={() => navigate("/notifications")}
-          className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="relative rounded-lg p-2 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-primary text-[10px] font-semibold text-white">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
         </button>
         <div className="ml-2 items-center gap-2 flex">
           <div className="text-right">
-            <p className="text-sm font-medium dark:text-white">{user?.name}</p>
-            <p className="text-xs capitalize text-gray-500">
+            <p className="text-sm font-medium text-text-primary">{user?.name}</p>
+            <p className="text-xs capitalize text-text-muted">
               {user?.role?.replace("_", " ")}
             </p>
           </div>
           <button
-            onClick={handleLogout}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+            onClick={() => setShowLogoutModal(true)}
+            className="rounded-lg p-2 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
             title="Logout"
           >
             <LogOut className="h-5 w-5" />

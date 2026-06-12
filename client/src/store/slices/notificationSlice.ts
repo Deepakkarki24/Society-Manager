@@ -27,7 +27,7 @@ export const fetchUnreadCount = createAsyncThunk(
   'notifications/unreadCount',
   async () => {
     const { data } = await api.get('/api/notifications/unread-count');
-    return data.data.data.count as number;
+    return data.data.count as number;
   }
 );
 

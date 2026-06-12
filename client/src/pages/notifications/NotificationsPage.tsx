@@ -28,7 +28,7 @@ export const NotificationsPage = () => {
   return (
     <div className="w-full space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold dark:text-white">Notifications</h1>
+        <h1 className="text-2xl font-bold text-text-primary">Notifications</h1>
         <Button variant="secondary" onClick={markAllRead}>Mark all read</Button>
       </div>
 
@@ -39,16 +39,16 @@ export const NotificationsPage = () => {
           {items.map((n) => (
             <Card
               key={n._id}
-              className={!n.isRead ? 'border-primary-200 dark:border-primary-800' : ''}
+              className={!n.isRead ? 'border-primary-400/30 ring-1 bg-linear-to-br from-[#00c8ff75]  to-[#0073ff66] ring-primary-400/20' : ''}
             >
               <div className="flex justify-between">
                 <div>
-                  <h3 className="font-medium dark:text-white">{n.title}</h3>
-                  <p className="text-sm text-gray-500">{n.message}</p>
-                  <p className="mt-1 text-xs text-gray-400">{new Date(n.createdAt).toLocaleString()}</p>
+                  <h3 className="font-medium text-text-primary">{n.title}</h3>
+                  <p className={`text-sm ${n.isRead ? "text-text-muted" : "text-text-primary"}`}>{n.message}</p>
+                  <p className={`mt-1 text-xs ${n.isRead ? "text-text-muted" : "text-text-primary"}`}>{new Date(n.createdAt).toLocaleString()}</p>
                 </div>
                 {!n.isRead && (
-                  <Button size="sm" variant="ghost" onClick={() => handleRead(n._id)}>Mark read</Button>
+                  <Button size="sm" className='text-white' variant="ghost" onClick={() => handleRead(n._id)}>Mark read</Button>
                 )}
               </div>
             </Card>

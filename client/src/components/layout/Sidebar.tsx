@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import type { UserRole } from '@/types';
 import type React from 'react';
+import { RobotIcon } from '@phosphor-icons/react';
 
 interface NavItem {
   to: string;
@@ -45,11 +46,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const navigate = useNavigate()
 
   return (
-    <aside className={`hidden lg:block w-64 shrink-0 border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900`}>
+    <aside className="hidden lg:block w-64 shrink-0 border-r border-border-subtle bg-[#1F1F1F]">
       <div onClick={() => navigate('/')}
-        className="w-fit flex cursor-pointer gap-1 text-primary-600 h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
-        <Building2 className="h-8 w-8" />
-        <span className="text-xl font-bold">SIMP</span>
+        className="w-fit flex cursor-pointer gap-2 text-gradient-primary h-16 items-center px-6">
+        <Building2 className="h-8 w-8 text-primary-400" />
+        <span className="text-xl font-bold tracking-tight">SIMP</span>
       </div>
       <nav className="space-y-1 p-4">
         {filtered.map(({ to, icon: Icon, label, type }) => (
@@ -57,17 +58,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} rounded-lg overflow-hidden px-3 py-2 text-sm font-medium transition ${isActive
-                  ? 'dark:bg-white/15 bg-black/10 backdrop-blur-sm dark:text-primary-400'
-                  : 'text-gray-600 hover:bg-black/10 dark:text-gray-400 dark:hover:bg-white/10'
+                `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} overflow-hidden px-3 py-2.5 text-xs font-medium tracking-wider transition-all duration-200 ${isActive
+                  ? 'bg-black/30 rounded-xl shadow-sm shadow-primary-600/10'
+                  : 'text-white/90 hover:bg-surface-hover hover:text-text-primary'
                 }`
               }
             >
-              <Icon className="h-5 w-5" />
-              {label}
+              {
+                role === "resident" && type === "complaints"
+                  ? <div className='flex items-center gap-2'>
+                    <Icon className="h-5 w-5" />
+                    Your Complaints
+                  </div>
+                  : role === "resident" && type === "dashboard"
+                    ? <div className='flex items-center gap-2'>
+                      <RobotIcon size={22} className="text-primary-400" />
+                      AI Assistant
+                    </div>
+                    : <div className='flex items-center gap-2'>
+                      <Icon className="h-5 w-5" />
+                      {label}
+                    </div>
+              }
 
             </NavLink>
-            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-blue-500 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
+            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-primary-400 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
           </div>
         ))}
       </nav>
@@ -83,9 +98,9 @@ export const SidebarMobile: React.FC<SidebarMobileProps> = ({ role }) => {
   const filtered = navItems.filter((item) => item.roles.includes(role));
 
   return (
-    <aside className={`block lg:hidden w-64 shrink-0 border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900`}>
-      <div className="flex h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
-        <span className="text-xl font-bold text-primary-600">SIMP</span>
+    <aside className="block lg:hidden w-64 shrink-0 border-r border-border-subtle bg-surface-elevated">
+      <div className="flex h-16 items-center border-b border-border-subtle px-6">
+        <span className="text-xl font-bold text-gradient-primary">SIMP</span>
       </div>
       <nav className="space-y-1 p-4">
         {filtered.map(({ to, icon: Icon, label, type }) => (
@@ -93,9 +108,9 @@ export const SidebarMobile: React.FC<SidebarMobileProps> = ({ role }) => {
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} rounded-lg overflow-hidden px-3 py-2 text-sm font-medium transition ${isActive
-                  ? 'dark:bg-white/15 bg-black/10 backdrop-blur-sm dark:text-primary-400'
-                  : 'text-gray-600 hover:bg-black/10 dark:text-gray-400 dark:hover:bg-white/10'
+                `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} rounded-lg overflow-hidden px-3 py-2.5 text-sm font-medium transition-all duration-200 ${isActive
+                  ? 'bg-gradient-primary/15 text-primary-300 ring-1 ring-primary-400/25'
+                  : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary'
                 }`
               }
             >
@@ -103,7 +118,7 @@ export const SidebarMobile: React.FC<SidebarMobileProps> = ({ role }) => {
               {label}
 
             </NavLink>
-            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-blue-500 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
+            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-primary-400 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
           </div>
         ))}
       </nav>
