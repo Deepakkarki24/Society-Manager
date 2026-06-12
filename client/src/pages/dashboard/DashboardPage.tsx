@@ -24,7 +24,7 @@ import type { DashboardAnalytics } from "@/types";
 import { MONTHS } from "@/constants";
 import ChatInput from "@/components/chat/ChatInput";
 import { createNewSession, getCurrentSessionChats, getDashboardAnalytics, getSessions } from "@/api-manager/requestHandler";
-import { ComplaintCard, type ComplaintCardProps } from "@/components/chat/CompaintCard";
+import { ComplaintCard, type ComplaintCardProps } from "@/components/chat/ComplaintCard";
 import { PlusIcon } from "@phosphor-icons/react/dist/ssr";
 import { currentSessionKey } from "@/utils/localStorageKeys";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/Tooltip";

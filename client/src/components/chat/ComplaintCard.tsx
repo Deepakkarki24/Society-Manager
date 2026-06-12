@@ -61,7 +61,7 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
             </p>
 
             {/* Footer */}
-            <div className="mt-5 flex flex-wrap items-center gap-2">
+            <div className="mt-5 flex flex-wrap items-center gap-2 relative">
                 <span className="rounded-lg bg-primary-400/15 px-3 py-1 text-xs font-medium text-primary-300 ring-1 ring-primary-400/20">
                     {category}
                 </span>
@@ -69,6 +69,8 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
                 <span className="rounded-lg bg-surface-hover px-3 py-1 text-xs font-medium text-text-secondary ring-1 ring-border-subtle">
                     {status}
                 </span>
+
+                <span className="text-white text-xs font-semibold absolute right-0 bottom-0">Complaint generated</span>
             </div>
         </div>
     );
