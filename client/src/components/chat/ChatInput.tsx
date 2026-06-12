@@ -101,7 +101,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
           </div>
         </div>
       }
-      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-2xl p-2 glass-strong ai-glow`}>
+      <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-2xl p-2 bg-[#1F1F1F]`}>
         {/* Upload Button */}
 
         <Tooltip>
@@ -132,7 +132,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
           value={message}
           placeholder="Report an issue or ask Society AI..."
           onChange={handleChange}
-          className="max-h-40 flex-1 py-3 resize-none bg-transparent outline-none text-base text-text-primary placeholder:text-text-muted"
+          className="max-h-40 flex-1 py-3 resize-none bg-transparent outline-none text-base text-text-primary placeholder:text-white/50"
         />
 
         {/* Send Button */}

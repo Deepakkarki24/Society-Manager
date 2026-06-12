@@ -38,7 +38,15 @@
 }
 
 body {
-  @apply bg-surface text-text-primary antialiased;
+  background-color: rgb(15, 15, 15);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 58% 52%,
+      rgba(0, 114, 255, 0.22) 0%,
+      rgba(0, 114, 255, 0.12) 35%,
+      rgba(0, 114, 255, 0.04) 60%,
+      transparent 100%);
+
+  background-attachment: fixed;
   font-family: "Inter", "Segoe UI", sans-serif;
 }
 
@@ -91,7 +99,7 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
-  height: 4px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -99,7 +107,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 198, 255, 0.25);
+  background: #2a2a2a;
   border-radius: 10px;
 }
 

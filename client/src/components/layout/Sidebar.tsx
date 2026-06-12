@@ -59,8 +59,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
               to={to}
               className={({ isActive }) =>
                 `flex items-center gap-3 ${(type === "visitors" || type === 'payments') && "cursor-not-allowed opacity-50"} overflow-hidden px-3 py-2.5 text-xs font-medium tracking-wider transition-all duration-200 ${isActive
-                  ? 'bg-black/30 rounded-xl shadow-sm shadow-primary-600/10'
-                  : 'text-white/90 hover:bg-surface-hover hover:text-text-primary'
+                  ? 'bg-black/30 text-white/90 rounded-xl shadow-sm shadow-primary-600/10'
+                  : 'text-white/80 hover:bg-surface-hover hover:text-text-primary'
                 }`
               }
             >

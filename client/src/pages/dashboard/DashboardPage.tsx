@@ -291,7 +291,7 @@ export const DashboardPage = () => {
                           className={`shrink-0 cursor-pointer px-4 py-2 rounded-xl whitespace-nowrap transition-all duration-200
                   ${currentSessionId === s._id
                               ? "bg-linear-to-br from-[#00c8ff75]  to-[#0073ff66] text-white shadow-md shadow-primary-600/25"
-                              : "bg-surface-hover text-text-secondary hover:bg-surface-card hover:text-text-primary ring-1 ring-border-subtle"
+                              : "bg-white/5 backdrop-blur-sm text-text-secondary hover:bg-surface-card hover:text-text-primary"
                             }`}
                         >
                           {s.title}
