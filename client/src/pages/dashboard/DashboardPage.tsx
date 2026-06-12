@@ -11,7 +11,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
@@ -28,6 +27,7 @@ import { createNewSession, getCurrentSessionChats, getDashboardAnalytics, getSes
 import { ComplaintCard, type ComplaintCardProps } from "@/components/chat/CompaintCard";
 import { PlusIcon } from "@phosphor-icons/react/dist/ssr";
 import { currentSessionKey } from "@/utils/localStorageKeys";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/Tooltip";
 
 const COLORS = [
   "#3b82f6",
@@ -266,12 +266,20 @@ export const DashboardPage = () => {
           {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
             <div className="absolute top-0 w-full z-20 mb-6">
               <div className="flex items-center gap-2 p-2 bg-white/5 backdrop-blur-2xl rounded-lg">
-                <button
-                  onClick={createNewChatSession}
-                  className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
-                >
-                  <PlusIcon size={22} className="text-white" />
-                </button>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={createNewChatSession}
+                      className="shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer"
+                    >
+                      <PlusIcon size={22} className="text-white" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Create new chat
+                  </TooltipContent>
+                </Tooltip>
 
                 <div
                   ref={sessionsContainerRef}

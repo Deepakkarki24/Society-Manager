@@ -4,6 +4,7 @@ import { generateComplaint } from "@/api-manager/requestHandler";
 import toast from "react-hot-toast";
 import { fileToBase64 } from "@/utils/utils";
 import { SpinnerGapIcon } from "@phosphor-icons/react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/Tooltip";
 
 interface ChatInputInterface {
   currentSessionId: string | null
@@ -90,14 +91,21 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
       }
       <div className={`flex ${isBottom ? "items-end" : "items-center"} gap-2 rounded-3xl p-2 border border-white/5 dark:bg-gray-900 shadow-sm`}>
         {/* Upload Button */}
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition"
-        >
-          <Paperclip size={20} />
-        </button>
 
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex h-10 w-10 items-center justify-center rounded-full cursor-pointer transition"
+            >
+              <Paperclip size={20} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent dir="top">
+            Upload an image
+          </TooltipContent>
+        </Tooltip>
         <input
           ref={fileInputRef}
           type="file"
@@ -116,16 +124,23 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
         />
 
         {/* Send Button */}
-        <button
-          onClick={handleSend}
-          disabled={!message.trim()}
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black text-white transition disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {
-            !isloading ? <Send size={18} /> :
-              <SpinnerGapIcon size={18} className="animate-spin transition-all ease-in" />
-          }
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={handleSend}
+              disabled={!message.trim()}
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {
+                !isloading ? <Send size={18} /> :
+                  <SpinnerGapIcon size={18} className="animate-spin transition-all ease-in" />
+              }
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Generate
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
