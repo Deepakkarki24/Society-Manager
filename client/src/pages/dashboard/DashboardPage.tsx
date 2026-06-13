@@ -288,7 +288,7 @@ export const DashboardPage = () => {
                         <button
                           key={s._id}
                           onClick={() => handleSessionClick(s._id)}
-                          className={`shrink-0 cursor-pointer sm:px-4 sm:py-1 px-1 py-1 rounded-xl whitespace-nowrap transition-all duration-200
+                          className={`shrink-0 cursor-pointer sm:px-4 sm:py-1 px-2 py-1 rounded-xl whitespace-nowrap transition-all duration-200
                   ${currentSessionId === s._id
                               ? "bg-linear-to-br from-[#00c8ff75]  to-[#0073ff66] text-white shadow-md shadow-primary-600/25"
                               : "bg-white/5 backdrop-blur-sm text-text-secondary hover:bg-surface-card hover:text-text-primary"
