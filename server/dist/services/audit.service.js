@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createAuditLog = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const models_1 = require("../models");
+const AuditLog_1 = require("../models/AuditLog");
 const createAuditLog = async (req, action, entity, entityId, details) => {
     if (!req.user)
         return;
-    await models_1.AuditLog.create({
+    await AuditLog_1.AuditLog.create({
         user: req.user._id,
         action,
         entity,

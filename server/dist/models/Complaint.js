@@ -40,16 +40,6 @@ const commentSchema = new mongoose_1.Schema({
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
 }, { _id: true });
-const timelineSchema = new mongoose_1.Schema({
-    status: {
-        type: String,
-        enum: ['pending', 'assigned', 'in_progress', 'resolved', 'reopened'],
-        required: true,
-    },
-    note: String,
-    updatedBy: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
-    createdAt: { type: Date, default: Date.now },
-}, { _id: true });
 const complaintSchema = new mongoose_1.Schema({
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true },
@@ -69,7 +59,7 @@ const complaintSchema = new mongoose_1.Schema({
     },
     priority: {
         type: String,
-        enum: ['low', 'medium', 'high', 'urgent'],
+        enum: ['low', 'medium', 'high', 'urgent', 'critical'],
         default: 'medium',
     },
     status: {
@@ -80,10 +70,9 @@ const complaintSchema = new mongoose_1.Schema({
     society: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Society', required: true },
     createdBy: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
     assignedTo: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
-    images: [String],
+    image: String,
     completionProof: [String],
     comments: [commentSchema],
-    timeline: [timelineSchema],
     resolvedAt: Date,
 }, { timestamps: true });
 complaintSchema.index({ society: 1, status: 1 });

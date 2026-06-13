@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createNotification = exports.setSocketIO = void 0;
-const models_1 = require("../models");
+const Notification_1 = require("../models/Notification");
 let io = null;
 const setSocketIO = (socketServer) => {
     io = socketServer;
 };
 exports.setSocketIO = setSocketIO;
 const createNotification = async (params) => {
-    const notification = await models_1.Notification.create({
+    const notification = await Notification_1.Notification.create({
         recipient: params.recipientId,
         title: params.title,
         message: params.message,

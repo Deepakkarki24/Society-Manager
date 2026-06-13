@@ -36,7 +36,12 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
             {/* Header */}
             {image &&
                 <div className="w-auto aspect-video object-contain rounded-xl overflow-hidden mb-4 ring-1 ring-border-subtle">
-                    <img className="w-full object-cover aspect-auto" src={image} alt="image" />
+                    <img
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                        className="w-full object-cover aspect-auto"
+                        src={image}
+                        alt="image" />
                 </div>
             }
             <div className="flex items-start justify-between gap-4">

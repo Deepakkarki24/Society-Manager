@@ -5,8 +5,8 @@ import { login } from '@/store/slices/authSlice';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
-import { Building2 } from 'lucide-react';
 import loginPageImage from '@/assets/images/login-img.png'
+import loginImg from '@/assets/logo/logo.png'
 
 interface LoginForm {
   email: string;
@@ -36,8 +36,8 @@ export const LoginPage = () => {
       <div className="hidden flex-1 items-center justify-center lg:flex">
         <div className="max-w-md px-8">
           <div className='flex gap-3 items-center justify-start w-fit'>
-            <Building2 className="h-16 w-16 text-primary-400" />
-            <h1 className="text-4xl font-bold text-gradient-primary">SIMP</h1>
+            {/* <h1 className="text-4xl font-bold text-gradient-primary">SIMP</h1> */}
+            <img src={loginImg} alt="image" className='w-55' draggable={false} onContextMenu={(e) => e.preventDefault()} />
           </div>
           <p className="mt-4 text-xl tracking-wide text-primary-200">
             <span className='font-semibold'>Society Issues Management Platform</span>

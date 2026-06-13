@@ -5,12 +5,6 @@ export interface IComplaintComment {
     text: string;
     createdAt: Date;
 }
-export interface IComplaintTimeline {
-    status: ComplaintStatus;
-    note?: string;
-    updatedBy: mongoose.Types.ObjectId;
-    createdAt: Date;
-}
 export interface IComplaint extends Document {
     title: string;
     description: string;
@@ -20,10 +14,9 @@ export interface IComplaint extends Document {
     society: mongoose.Types.ObjectId;
     createdBy: mongoose.Types.ObjectId;
     assignedTo?: mongoose.Types.ObjectId;
-    images: string[];
+    image: string;
     completionProof: string[];
     comments: IComplaintComment[];
-    timeline: IComplaintTimeline[];
     resolvedAt?: Date;
     createdAt: Date;
     updatedAt: Date;

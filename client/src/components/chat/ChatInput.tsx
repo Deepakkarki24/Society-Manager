@@ -121,7 +121,12 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
       {previewImage &&
         <div className="absolute -top-25 left-2 w-22 aspect-square rounded-lg overflow-hidden">
           <div className="relative w-full h-full ring-2 ring-primary-400/30 rounded-lg">
-            <img src={previewImage} alt="preview Image" className="object-cover w-full h-full" />
+            <img
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              src={previewImage}
+              alt="preview Image"
+              className="object-cover w-full h-full" />
             <Tooltip>
               <TooltipTrigger asChild>
                 <XIcon onClick={() => setPreviewImage("")} className="text-white cursor-pointer absolute top-1 right-1 bg-red-500/80 rounded-full p-0.5" size={18} />
@@ -170,7 +175,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
         {/*chat mode*/}
         <button
           onClick={() => setShowChatModeDropdown((prev) => !prev)}
-          className="sm:p-2 w-20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
+          className="sm:p-2 max-sm:w-20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
           <span className="flex gap-1 items-center text-white sm:text-sm text-xs font-stretch-extra-condensed tracking-wider">
             {chatMode.toUpperCase()[0] + chatMode.toLowerCase().slice(1)}
             {!showChatModeDropdown ? <CaretUpIcon size={18} /> :

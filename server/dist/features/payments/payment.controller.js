@@ -1,19 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPaymentSummary = exports.recordPayment = exports.getPayments = exports.generateInvoices = void 0;
-const models_1 = require("../../models");
-const ApiError_1 = require("../../utils/ApiError");
 const pagination_1 = require("../../utils/pagination");
 const notification_service_1 = require("../../services/notification.service");
+const ApiResponse_1 = require("../../utils/ApiResponse");
+const Society_1 = require("../../models/Society");
+const User_1 = require("../../models/User");
+const Payment_1 = require("../../models/Payment");
 const generateInvoices = async (req, res) => {
     const { month, year } = req.body;
     const societyId = req.user.society;
     if (!societyId)
-        throw new ApiError_1.ApiError(400, "Society context required");
-    const society = await models_1.Society.findById(societyId);
+        return (0, ApiResponse_1.errorResponse)(res, 400, "Society context required");
+    const society = await Society_1.Society.findById(societyId);
     if (!society)
-        throw new ApiError_1.ApiError(404, "Society not found");
-    const residents = await models_1.User.find({
+        return (0, ApiResponse_1.errorResponse)(res, 404, "Society not found");
+    const residents = await User_1.User.find({
         society: societyId,
         role: "resident",
         isActive: true,
@@ -21,7 +23,7 @@ const generateInvoices = async (req, res) => {
     const dueDate = new Date(year, month, 5);
     const invoices = [];
     for (const resident of residents) {
-        const existing = await models_1.Payment.findOne({
+        const existing = await Payment_1.Payment.findOne({
             society: societyId,
             resident: resident._id,
             month,
@@ -29,7 +31,7 @@ const generateInvoices = async (req, res) => {
         });
         if (existing)
             continue;
-        const payment = await models_1.Payment.create({
+        const payment = await Payment_1.Payment.create({
             society: societyId,
             resident: resident._id,
             amount: society.maintenanceAmount,
@@ -68,12 +70,12 @@ const getPayments = async (req, res) => {
     if (req.query.year)
         filter.year = parseInt(req.query.year, 10);
     const [payments, total] = await Promise.all([
-        models_1.Payment.find(filter)
+        Payment_1.Payment.find(filter)
             .populate("resident", "name flatNumber block email")
             .sort({ year: -1, month: -1 })
             .skip(skip)
             .limit(limit),
-        models_1.Payment.countDocuments(filter),
+        Payment_1.Payment.countDocuments(filter),
     ]);
     res.json({
         success: true,
@@ -82,12 +84,12 @@ const getPayments = async (req, res) => {
 };
 exports.getPayments = getPayments;
 const recordPayment = async (req, res) => {
-    const payment = await models_1.Payment.findById(req.params.id);
+    const payment = await Payment_1.Payment.findById(req.params.id);
     if (!payment)
-        throw new ApiError_1.ApiError(404, "Payment not found");
+        return (0, ApiResponse_1.errorResponse)(res, 404, "Payment not found");
     if (req.user.role === "resident" &&
         payment.resident.toString() !== req.user._id) {
-        throw new ApiError_1.ApiError(403, "Access denied");
+        return (0, ApiResponse_1.errorResponse)(res, 403, "Access denied");
     }
     payment.status = "paid";
     payment.paidAt = new Date();
@@ -104,11 +106,11 @@ exports.recordPayment = recordPayment;
 const getPaymentSummary = async (req, res) => {
     const societyId = req.user.society;
     const [pending, paid, overdue] = await Promise.all([
-        models_1.Payment.countDocuments({ society: societyId, status: "pending" }),
-        models_1.Payment.countDocuments({ society: societyId, status: "paid" }),
-        models_1.Payment.countDocuments({ society: societyId, status: "overdue" }),
+        Payment_1.Payment.countDocuments({ society: societyId, status: "pending" }),
+        Payment_1.Payment.countDocuments({ society: societyId, status: "paid" }),
+        Payment_1.Payment.countDocuments({ society: societyId, status: "overdue" }),
     ]);
-    const revenue = await models_1.Payment.aggregate([
+    const revenue = await Payment_1.Payment.aggregate([
         { $match: { society: societyId, status: "paid" } },
         { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);

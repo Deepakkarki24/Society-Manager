@@ -5,7 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSuperAdminAnalytics = exports.getDashboardAnalytics = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const models_1 = require("../../models");
+const Complaint_1 = require("../../models/Complaint");
+const User_1 = require("../../models/User");
+const Society_1 = require("../../models/Society");
+const Payment_1 = require("../../models/Payment");
+const Announcement_1 = require("../../models/Announcement");
 const getSocietyScope = (req) => {
     if (req.user.role === "super_admin") {
         return req.query.societyId
@@ -20,18 +24,18 @@ const getDashboardAnalytics = async (req, res) => {
     const societyId = getSocietyScope(req);
     const match = societyId ? { society: societyId } : {};
     const [totalComplaints, resolvedComplaints, pendingComplaints, categoryStats, monthlyTrends, totalResidents, totalSocieties,] = await Promise.all([
-        models_1.Complaint.countDocuments(match),
-        models_1.Complaint.countDocuments({ ...match, status: "resolved" }),
-        models_1.Complaint.countDocuments({
+        Complaint_1.Complaint.countDocuments(match),
+        Complaint_1.Complaint.countDocuments({ ...match, status: "resolved" }),
+        Complaint_1.Complaint.countDocuments({
             ...match,
             status: { $in: ["pending", "assigned", "in_progress", "reopened"] },
         }),
-        models_1.Complaint.aggregate([
+        Complaint_1.Complaint.aggregate([
             { $match: match },
             { $group: { _id: "$category", count: { $sum: 1 } } },
             { $sort: { count: -1 } },
         ]),
-        models_1.Complaint.aggregate([
+        Complaint_1.Complaint.aggregate([
             { $match: match },
             {
                 $group: {
@@ -49,18 +53,18 @@ const getDashboardAnalytics = async (req, res) => {
             { $limit: 12 },
         ]),
         societyId
-            ? models_1.User.countDocuments({
+            ? User_1.User.countDocuments({
                 society: societyId,
                 role: "resident",
                 isActive: true,
             })
-            : models_1.User.countDocuments({ role: "resident", isActive: true }),
+            : User_1.User.countDocuments({ role: "resident", isActive: true }),
         req.user?.role === "super_admin"
-            ? models_1.Society.countDocuments({ isActive: true })
+            ? Society_1.Society.countDocuments({ isActive: true })
             : Promise.resolve(1),
     ]);
     const paymentMatch = societyId ? { society: societyId } : {};
-    const paymentStats = await models_1.Payment.aggregate([
+    const paymentStats = await Payment_1.Payment.aggregate([
         { $match: paymentMatch },
         {
             $group: {
@@ -71,7 +75,7 @@ const getDashboardAnalytics = async (req, res) => {
         },
     ]);
     const recentAnnouncements = societyId
-        ? await models_1.Announcement.countDocuments({
+        ? await Announcement_1.Announcement.countDocuments({
             society: societyId,
             createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
         })
@@ -101,11 +105,11 @@ const getDashboardAnalytics = async (req, res) => {
 };
 exports.getDashboardAnalytics = getDashboardAnalytics;
 const getSuperAdminAnalytics = async (req, res) => {
-    const societiesByCity = await models_1.Society.aggregate([
+    const societiesByCity = await Society_1.Society.aggregate([
         { $match: { isActive: true } },
         { $group: { _id: "$city", count: { $sum: 1 } } },
     ]);
-    const complaintsBySociety = await models_1.Complaint.aggregate([
+    const complaintsBySociety = await Complaint_1.Complaint.aggregate([
         {
             $group: {
                 _id: "$society",

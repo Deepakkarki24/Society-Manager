@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAuditLogs = void 0;
-const models_1 = require("../../models");
 const pagination_1 = require("../../utils/pagination");
+const AuditLog_1 = require("../../models/AuditLog");
 const getAuditLogs = async (req, res) => {
     const { page, limit, skip } = (0, pagination_1.getPagination)(req.query.page, req.query.limit);
     const filter = {};
@@ -17,12 +17,12 @@ const getAuditLogs = async (req, res) => {
     if (req.query.action)
         filter.action = req.query.action;
     const [logs, total] = await Promise.all([
-        models_1.AuditLog.find(filter)
+        AuditLog_1.AuditLog.find(filter)
             .populate("user", "name email role")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit),
-        models_1.AuditLog.countDocuments(filter),
+        AuditLog_1.AuditLog.countDocuments(filter),
     ]);
     res.json({ success: true, ...(0, pagination_1.paginatedResponse)(logs, total, page, limit) });
 };

@@ -5,22 +5,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requireSociety = exports.authorize = exports.authenticate = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const models_1 = require("../models");
-const ApiError_1 = require("../utils/ApiError");
-const authenticate = async (req, _res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) {
-        throw new ApiError_1.ApiError(401, "Authentication required");
-    }
-    const token = authHeader.split(" ")[1];
-    const secret = process.env.JWT_SECRET;
+const env_1 = require("../config/env");
+const ApiResponse_1 = require("../utils/ApiResponse");
+const User_1 = require("../models/User");
+const authenticate = async (req, res, next) => {
+    const token = req.cookies.token;
+    const secret = env_1.JWT_SECRET;
     if (!secret)
-        throw new ApiError_1.ApiError(500, "JWT configuration error");
+        return (0, ApiResponse_1.errorResponse)(res, 500, "JWT configuration error");
+    if (!token)
+        return (0, ApiResponse_1.errorResponse)(res, 401, 'Null or Invalid token');
     try {
         const decoded = jsonwebtoken_1.default.verify(token, secret);
-        const user = await models_1.User.findById(decoded.userId).select("-password");
+        const user = await User_1.User.findById(decoded.userId).select("-password");
         if (!user || !user.isActive) {
-            throw new ApiError_1.ApiError(401, "User not found or inactive");
+            return (0, ApiResponse_1.errorResponse)(res, 401, "User not found or inactive");
         }
         req.user = {
             _id: user._id.toString(),
@@ -32,24 +31,24 @@ const authenticate = async (req, _res, next) => {
         next();
     }
     catch {
-        throw new ApiError_1.ApiError(401, "Invalid or expired token");
+        return (0, ApiResponse_1.errorResponse)(res, 401, "Invalid or expired token");
     }
 };
 exports.authenticate = authenticate;
-const authorize = (...roles) => (req, _res, next) => {
+const authorize = (...roles) => (req, res, next) => {
     if (!req.user)
-        throw new ApiError_1.ApiError(401, "Authentication required");
+        return (0, ApiResponse_1.errorResponse)(res, 401, "Authentication required");
     if (!roles.includes(req.user.role)) {
-        throw new ApiError_1.ApiError(403, "Insufficient permissions");
+        return (0, ApiResponse_1.errorResponse)(res, 403, "Insufficient permissions");
     }
     next();
 };
 exports.authorize = authorize;
-const requireSociety = (req, _res, next) => {
+const requireSociety = (req, res, next) => {
     if (req.user?.role === "super_admin")
         return next();
     if (!req.user?.society) {
-        throw new ApiError_1.ApiError(403, "Society context required");
+        return (0, ApiResponse_1.errorResponse)(res, 403, "Society context required");
     }
     next();
 };

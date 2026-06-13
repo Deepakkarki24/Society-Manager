@@ -1,19 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rejectVisitor = exports.checkOutVisitor = exports.checkInVisitor = exports.getVisitors = exports.preApproveVisitor = void 0;
-const models_1 = require("../../models");
-const ApiError_1 = require("../../utils/ApiError");
 const pagination_1 = require("../../utils/pagination");
+const ApiResponse_1 = require("../../utils/ApiResponse");
+const User_1 = require("../../models/User");
+const Visitor_1 = require("../../models/Visitor");
 const getSocietyId = (req) => req.user.role === "super_admin"
     ? req.query.societyId
     : req.user.society;
 const preApproveVisitor = async (req, res) => {
     const societyId = req.user.society;
     if (!societyId)
-        throw new ApiError_1.ApiError(400, "Society context required");
-    const host = await models_1.User.findById(req.user._id);
+        return (0, ApiResponse_1.errorResponse)(res, 400, "Society context required");
+    const host = await User_1.User.findById(req.user._id);
     const flatNumber = req.body.flatNumber || host?.flatNumber || "N/A";
-    const visitor = await models_1.Visitor.create({
+    const visitor = await Visitor_1.Visitor.create({
         ...req.body,
         society: societyId,
         hostResident: req.user._id,
@@ -40,13 +41,13 @@ const getVisitors = async (req, res) => {
         filter.createdAt = { $gte: date, $lt: nextDay };
     }
     const [visitors, total] = await Promise.all([
-        models_1.Visitor.find(filter)
+        Visitor_1.Visitor.find(filter)
             .populate("hostResident", "name flatNumber block")
             .populate("verifiedBy", "name")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit),
-        models_1.Visitor.countDocuments(filter),
+        Visitor_1.Visitor.countDocuments(filter),
     ]);
     res.json({
         success: true,
@@ -55,28 +56,28 @@ const getVisitors = async (req, res) => {
 };
 exports.getVisitors = getVisitors;
 const checkInVisitor = async (req, res) => {
-    const visitor = await models_1.Visitor.findByIdAndUpdate(req.params.id, {
+    const visitor = await Visitor_1.Visitor.findByIdAndUpdate(req.params.id, {
         status: "checked_in",
         checkInAt: new Date(),
         verifiedBy: req.user._id,
         notes: req.body.notes,
     }, { new: true });
     if (!visitor)
-        throw new ApiError_1.ApiError(404, "Visitor not found");
+        return (0, ApiResponse_1.errorResponse)(res, 404, "Visitor not found");
     res.json({ success: true, data: visitor });
 };
 exports.checkInVisitor = checkInVisitor;
 const checkOutVisitor = async (req, res) => {
-    const visitor = await models_1.Visitor.findByIdAndUpdate(req.params.id, { status: "checked_out", checkOutAt: new Date() }, { new: true });
+    const visitor = await Visitor_1.Visitor.findByIdAndUpdate(req.params.id, { status: "checked_out", checkOutAt: new Date() }, { new: true });
     if (!visitor)
-        throw new ApiError_1.ApiError(404, "Visitor not found");
+        return (0, ApiResponse_1.errorResponse)(res, 404, "Visitor not found");
     res.json({ success: true, data: visitor });
 };
 exports.checkOutVisitor = checkOutVisitor;
 const rejectVisitor = async (req, res) => {
-    const visitor = await models_1.Visitor.findByIdAndUpdate(req.params.id, { status: "rejected", notes: req.body.notes }, { new: true });
+    const visitor = await Visitor_1.Visitor.findByIdAndUpdate(req.params.id, { status: "rejected", notes: req.body.notes }, { new: true });
     if (!visitor)
-        throw new ApiError_1.ApiError(404, "Visitor not found");
+        return (0, ApiResponse_1.errorResponse)(res, 404, "Visitor not found");
     res.json({ success: true, data: visitor });
 };
 exports.rejectVisitor = rejectVisitor;

@@ -9,7 +9,7 @@ export interface AuthRequest extends Request {
         email: string;
     };
 }
-export declare const authenticate: (req: AuthRequest, _res: Response, next: NextFunction) => Promise<void>;
-export declare const authorize: (...roles: UserRole[]) => (req: AuthRequest, _res: Response, next: NextFunction) => void;
-export declare const requireSociety: (req: AuthRequest, _res: Response, next: NextFunction) => void;
+export declare const authenticate: (req: AuthRequest, res: Response, next: NextFunction) => Promise<Response<any, Record<string, any>> | undefined>;
+export declare const authorize: (...roles: UserRole[]) => (req: AuthRequest, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined;
+export declare const requireSociety: (req: AuthRequest, res: Response, next: NextFunction) => void | Response<any, Record<string, any>>;
 //# sourceMappingURL=auth.d.ts.map

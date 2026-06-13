@@ -1,7 +1,8 @@
-import { Bell, Menu, LogOut, Building2 } from "lucide-react";
+import { Bell, Menu, LogOut } from "lucide-react";
 import { useAppSelector } from "@/store/hooks";
 import { useNavigate } from "react-router-dom";
 import type React from "react";
+import logo from "@/assets/logo/logo.png"
 
 
 interface HeaderProps {
@@ -27,10 +28,16 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, setShowLogoutModal 
         >
           <Menu className="h-5 w-5" />
         </button>
-        <span className="text-lg flex items-center gap-2 font-semibold lg:hidden text-gradient-primary">
-          <Building2 className="h-7 w-7 text-primary-400" />
-          SIMP
-        </span>
+        <div
+          onClick={() => navigate('/')}
+          className="w-24 flex cursor-pointer lg:hidden items-center py-2">
+          <img
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            src={logo}
+            className='w-full object-contain'
+            alt="logo" />
+        </div>
       </div>
       <div className="flex items-center gap-2">
         <button

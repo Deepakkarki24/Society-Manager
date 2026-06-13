@@ -14,6 +14,7 @@ import {
 import type { UserRole } from '@/types';
 import type React from 'react';
 import { RobotIcon } from '@phosphor-icons/react';
+import logo from "@/assets/logo/logo.png"
 
 interface NavItem {
   to: string;
@@ -47,10 +48,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
 
   return (
     <aside className="hidden lg:block w-64 shrink-0 border-r border-border-subtle bg-[#1F1F1F]">
-      <div onClick={() => navigate('/')}
-        className="w-fit flex cursor-pointer gap-2 text-gradient-primary h-16 items-center px-6">
-        <Building2 className="h-8 w-8 text-primary-400" />
-        <span className="text-xl font-bold tracking-tight">SIMP</span>
+      <div
+        onClick={() => navigate('/')}
+        className="w-40 flex cursor-pointer items-center px-6 pt-2">
+        <img
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          src={logo}
+          className='w-full object-contain'
+          alt="logo" />
       </div>
       <nav className="space-y-1 p-4">
         {filtered.map(({ to, icon: Icon, label, type }) => (
@@ -72,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role }) => {
                   </div>
                   : role === "resident" && type === "dashboard"
                     ? <div className='flex items-center gap-2'>
-                      <RobotIcon size={22} className="text-primary-400" />
+                      <RobotIcon size={22} />
                       AI Assistant
                     </div>
                     : <div className='flex items-center gap-2'>

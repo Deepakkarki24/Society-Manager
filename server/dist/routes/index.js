@@ -16,6 +16,8 @@ const notification_routes_1 = __importDefault(require("../features/notifications
 const analytics_routes_1 = __importDefault(require("../features/analytics/analytics.routes"));
 const feedback_routes_1 = __importDefault(require("../features/feedback/feedback.routes"));
 const audit_routes_1 = __importDefault(require("../features/audit/audit.routes"));
+const session_routes_1 = __importDefault(require("../features/chat/session.routes"));
+const chat_routes_1 = __importDefault(require("../features/chat/chat.routes"));
 const router = (0, express_1.Router)();
 // router.get('/health', (_req, res) => {
 //   res.json({ success: true, message: 'SIMP API is running' });
@@ -32,5 +34,7 @@ router.use("/notifications", notification_routes_1.default);
 router.use("/analytics", analytics_routes_1.default);
 router.use("/feedback", feedback_routes_1.default);
 router.use("/audit-logs", audit_routes_1.default);
+router.use("/sessions", session_routes_1.default);
+router.use("/chats", chat_routes_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

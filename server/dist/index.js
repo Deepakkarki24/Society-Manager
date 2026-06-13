@@ -10,7 +10,7 @@ const app_1 = require("./app");
 const database_1 = require("./config/database");
 const notification_service_1 = require("./services/notification.service");
 const env_1 = require("./config/env");
-const Port = Number(env_1.PORT) || 5000;
+const Port = Number(env_1.PORT) || 3001;
 if (env_1.NODE_ENV !== "production") {
     (0, database_1.connectDatabase)(env_1.MONGODB_URI || "");
 }
@@ -28,9 +28,16 @@ const startServer = async () => {
     });
     (0, notification_service_1.setSocketIO)(io);
     io.use((socket, next) => {
-        const token = socket.handshake.auth?.token;
-        if (!token)
+        const cookies = socket.handshake.headers.cookie;
+        if (!cookies)
             return next(new Error("Authentication required"));
+        const token = cookies
+            .split(";")
+            .find((c) => c.trim().startsWith("token="))
+            ?.split("=")[1];
+        if (!token) {
+            return next(new Error("Authentication required"));
+        }
         try {
             const decoded = jsonwebtoken_1.default.verify(token, env_1.JWT_SECRET);
             socket.data.userId = decoded.userId;
@@ -50,8 +57,8 @@ const startServer = async () => {
             socket.leave(`user:${userId}`);
         });
     });
-    server.listen(env_1.PORT, () => {
-        console.log(`Server running on port ${env_1.PORT}`);
+    server.listen(Port, () => {
+        console.log(`Server running on port ${Port}`);
     });
 };
 startServer().catch((err) => {
