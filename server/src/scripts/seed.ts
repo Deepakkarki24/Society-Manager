@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { MONGODB_PASSWORD, MONGODB_URI, MONGODB_USERNAME, NODE_ENV } from "../config/env";
 import { Society } from "../models/Society";
 import { User } from "../models/User";
+import { Complaint } from "../models/Complaint";
 // import { User } from "../models/User";
 
 const seed = async () => {
@@ -23,18 +24,19 @@ const seed = async () => {
 
   // await User.deleteMany({});
   // await Society.deleteMany({});
+  await Complaint.deleteMany({});
 
-  const society = await Society.create({
-    name: "Green Valley Residency",
-    address: "123 Main Street",
-    city: "Mumbai",
-    state: "Maharashtra",
-    pincode: "400001",
-    totalFlats: 120,
-    maintenanceAmount: 3500,
-    contactEmail: "admin@greenvalley.com",
-    contactPhone: "+919876543210",
-  });
+  // const society = await Society.create({
+  //   name: "Green Valley Residency",
+  //   address: "123 Main Street",
+  //   city: "Mumbai",
+  //   state: "Maharashtra",
+  //   pincode: "400001",
+  //   totalFlats: 120,
+  //   maintenanceAmount: 3500,
+  //   contactEmail: "admin@greenvalley.com",
+  //   contactPhone: "+919876543210",
+  // });
 
   // const society = await Society.create({
   //   name: "Stark tower",
@@ -64,16 +66,16 @@ const seed = async () => {
   //   phone: "+919876543211",
   // });
 
-  await User.create({
-    name: "Deepak karki",
-    email: "deepak@simp.com",
-    password: "admin123",
-    role: "resident",
-    society: society._id,
-    flatNumber: "A-101",
-    block: "A",
-    phone: "+919876543212",
-  });
+  // await User.create({
+  //   name: "Deepak karki",
+  //   email: "deepak@simp.com",
+  //   password: "admin123",
+  //   role: "resident",
+  //   society: society._id,
+  //   flatNumber: "A-101",
+  //   block: "A",
+  //   phone: "+919876543212",
+  // });
 
   // await User.create({
   //   name: "Mike Maintenance",

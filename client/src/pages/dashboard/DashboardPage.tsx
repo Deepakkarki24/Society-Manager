@@ -170,7 +170,7 @@ export const DashboardPage = () => {
 
   const createNewChatSession = async () => {
 
-    if (sessions && userChats.length === 0) return
+    // if (sessions && userChats.length === 0) return
 
     try {
       const response = await createNewSession()
