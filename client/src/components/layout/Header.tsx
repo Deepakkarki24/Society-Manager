@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, setShowLogoutModal 
         </button>
         <div className="ml-2 items-center gap-2 flex">
           <div className="text-right">
-            <p className="text-sm font-medium text-text-primary">{user?.name}</p>
+            <p className="sm:text-sm text-xs font-medium text-text-primary">{user?.name}</p>
             <p className="text-xs capitalize text-text-muted">
               {user?.role?.replace("_", " ")}
             </p>

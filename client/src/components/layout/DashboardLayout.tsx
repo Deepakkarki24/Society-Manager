@@ -17,7 +17,7 @@ export const DashboardLayout = () => {
   if (!user) return null;
 
   return (
-    <div className="relative sm:flex block">
+    <div className="relative sm:flex block min-h-screen">
       <Sidebar role={user.role} />
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">

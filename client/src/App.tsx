@@ -17,6 +17,7 @@ import { NotificationsPage } from "@/pages/notifications/NotificationsPage";
 import { AnalyticsPage } from "@/pages/analytics/AnalyticsPage";
 import { AuditLogsPage } from "@/pages/audit/AuditLogsPage";
 import { useAppSelector } from "@/store/hooks";
+import { ComplaintsPage } from "./pages/complaints/ComplaintPage";
 
 const HomeRedirect = () => {
   const { user } = useAppSelector((s) => s.auth);
@@ -52,6 +53,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/complaints" element={<ComplaintsPage />} />
             <Route path="/complaints/new" element={<CreateComplaintPage />} />
             <Route path="/complaints/:id" element={<ComplaintDetailPage />} />
             <Route path="/announcements" element={<AnnouncementsPage />} />

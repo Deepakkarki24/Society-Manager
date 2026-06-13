@@ -72,6 +72,15 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
     }
   };
 
+  const placeholder =
+    chatMode === "complaint"
+      ? window.innerWidth < 640
+        ? "Describe your issue..."
+        : "Describe your issue (e.g., water leakage, maintenance, security, etc.)"
+      : window.innerWidth < 640
+        ? "Ask about society rules..."
+        : "Ask anything about society rules, facilities, notices, or regulations...";
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -108,7 +117,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
   }, [image])
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
+    <div className="relative w-full max-w-4xl mx-auto max-sm:mb-2">
       {previewImage &&
         <div className="absolute -top-25 left-2 w-22 aspect-square rounded-lg overflow-hidden">
           <div className="relative w-full h-full ring-2 ring-primary-400/30 rounded-lg">
@@ -153,18 +162,16 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
           ref={textareaRef}
           rows={1}
           value={message}
-          placeholder={`${chatMode === "complaint"
-            ? "Describe your issue (e.g., water leakage, maintenance, security, etc.)"
-            : "Ask anything about society rules, facilities, notices, or regulations.."}`}
+          placeholder={placeholder}
           onChange={handleChange}
-          className="max-h-40 flex-1 py-3 resize-none bg-transparent outline-none text-base text-text-primary placeholder:text-white/50"
+          className="sm:max-h-40 max-h-30 flex-1 py-3 resize-none bg-transparent outline-none sm:text-base text-xs text-text-primary placeholder:text-white/50"
         />
 
         {/*chat mode*/}
         <button
           onClick={() => setShowChatModeDropdown((prev) => !prev)}
-          className="p-2 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
-          <span className="flex gap-1 items-center text-white text-sm font-stretch-extra-condensed tracking-wider">
+          className="sm:p-2 w-20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
+          <span className="flex gap-1 items-center text-white sm:text-sm text-xs font-stretch-extra-condensed tracking-wider">
             {chatMode.toUpperCase()[0] + chatMode.toLowerCase().slice(1)}
             {!showChatModeDropdown ? <CaretUpIcon size={18} /> :
               <CaretDownIcon size={18} />}
@@ -173,7 +180,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
 
         {
           showChatModeDropdown &&
-          <div className="w-40 absolute bottom-20 right-4 p-2 bg-white/10 rounded-xl">
+          <div className="w-40 absolute bottom-20 right-4 p-2 backdrop-blur-sm bg-white/10 rounded-xl">
             {
               CHAT_MODES.map((m, idx) => (
                 <div
@@ -181,8 +188,8 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
                     setChatMode(m.type)
                     setShowChatModeDropdown(false)
                   }}
-                  key={idx} className="w-full flex justify-between items-center hover:bg-white/15 cursor-pointer rounded-xl text-white text-sm p-2">
-                  <span>{m.label}</span>
+                  key={idx} className="w-full flex justify-between items-center hover:bg-white/15 cursor-pointer rounded-xl text-white sm:text-sm text-xs sm:p-2 p-1.5">
+                  {m.label}
                   {m.type === chatMode && < CheckIcon size={18} />}
 
                 </div>
