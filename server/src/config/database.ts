@@ -13,7 +13,7 @@ export const connectMongoDBAtlas = async () => {
   try {
     const username = encodeURIComponent(MONGODB_USERNAME || "");
     const password = encodeURIComponent(MONGODB_PASSWORD || "");
-    const uri = `mongodb+srv://${username}:${password}@cluster0.ugyic8h.mongodb.net/simp?retryWrites=true&w=majority&appName=simp`;
+    const uri = `mongodb+srv://${username}:${password}@cluster0.ugyic8h.mongodb.net/simp`;
     await mongoose.connect(uri);
 
     console.log("Connected to MongoDB Atlas with Mongoose");

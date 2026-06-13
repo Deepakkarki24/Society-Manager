@@ -23,6 +23,10 @@ const register = async (req, res) => {
             block,
         });
         const token = (0, token_1.signToken)(user._id.toString(), user.role, user.society?.toString());
+        // const isUserHasSession = await ChatSession.find()
+        // if (!isUserHasSession) {
+        //   await ChatSession.create()
+        // }
         await (0, audit_service_1.createAuditLog)(req, "register", "User", user._id.toString());
         res.cookie("token", token, {
             httpOnly: true,

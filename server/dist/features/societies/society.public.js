@@ -7,6 +7,7 @@ router.get("/public", async (_req, res) => {
     const societies = await Society_1.Society.find({ isActive: true })
         .select("name city state _id")
         .sort({ name: 1 });
+    console.log(societies);
     res.json({ success: true, data: societies });
 });
 exports.default = router;

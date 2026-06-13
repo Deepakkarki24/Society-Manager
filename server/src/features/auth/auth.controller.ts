@@ -5,6 +5,7 @@ import { createAuditLog } from "../../services/audit.service";
 import { signToken } from "../../utils/token";
 import { NODE_ENV } from "../../config/env";
 import { User } from "../../models/User";
+import { ChatSession } from "../../models/chat/ChatSession";
 
 export const register = async (req: AuthRequest, res: Response) => {
   try {
@@ -29,6 +30,12 @@ export const register = async (req: AuthRequest, res: Response) => {
       user.role,
       user.society?.toString(),
     );
+
+    // const isUserHasSession = await ChatSession.find()
+
+    // if (!isUserHasSession) {
+    //   await ChatSession.create()
+    // }
 
     await createAuditLog(req, "register", "User", user._id.toString());
 

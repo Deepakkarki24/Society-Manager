@@ -20,7 +20,7 @@ const createApp = () => {
     (0, cloudinary_1.configureCloudinary)();
     app.use((0, helmet_1.default)());
     app.use((0, cors_1.default)({
-        origin: [(env_1.CLIENT_URL || "http://localhost:5173"), "http://192.168.43.35:5173/"],
+        origin: [(env_1.CLIENT_URL || "http://localhost:5173"), "http://192.168.43.35:5173/", "https://simp-client.onrender.com"],
         credentials: true,
     }));
     app.use((0, compression_1.default)());

@@ -27,7 +27,7 @@ const startServer = async () => {
 
   const io = new Server(server, {
     cors: {
-      origin: CLIENT_URL || "http://localhost:5173",
+      origin: [(CLIENT_URL || "http://localhost:5173"), "https://simp-client.onrender.com"],
       credentials: true,
     },
   });
