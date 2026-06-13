@@ -173,31 +173,45 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
         />
 
         {/*chat mode*/}
-        <button
-          onClick={() => setShowChatModeDropdown((prev) => !prev)}
-          className="sm:p-2 max-sm:w-20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
-          <span className="flex gap-1 items-center text-white sm:text-sm text-xs font-stretch-extra-condensed tracking-wider">
-            {chatMode.toUpperCase()[0] + chatMode.toLowerCase().slice(1)}
-            {!showChatModeDropdown ? <CaretUpIcon size={18} /> :
-              <CaretDownIcon size={18} />}
-          </span>
-        </button>
+        <Tooltip>
+          <TooltipTrigger>
+            <button
+              onClick={() => setShowChatModeDropdown((prev) => !prev)}
+              className="sm:p-2 max-sm:w-20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
+              <span className="flex gap-1 items-center text-white sm:text-sm text-xs font-stretch-extra-condensed tracking-wider">
+                {chatMode.toUpperCase()[0] + chatMode.toLowerCase().slice(1)}
+                {!showChatModeDropdown ? <CaretUpIcon size={18} /> :
+                  <CaretDownIcon size={18} />}
+              </span>
+            </button>
+            <TooltipContent>
+              Chat mode
+            </TooltipContent>
+          </TooltipTrigger>
+        </Tooltip>
 
         {
           showChatModeDropdown &&
           <div className="w-40 absolute bottom-20 right-4 p-2 backdrop-blur-sm bg-white/10 rounded-xl">
             {
               CHAT_MODES.map((m, idx) => (
-                <div
-                  onClick={() => {
-                    setChatMode(m.type)
-                    setShowChatModeDropdown(false)
-                  }}
-                  key={idx} className="w-full flex justify-between items-center hover:bg-white/15 cursor-pointer rounded-xl text-white sm:text-sm text-xs sm:p-2 p-1.5">
-                  {m.label}
-                  {m.type === chatMode && < CheckIcon size={18} />}
-
-                </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => {
+                        setChatMode(m.type)
+                        setShowChatModeDropdown(false)
+                      }}
+                      disabled={m.type === 'details'}
+                      key={idx} className="disabled:cursor-not-allowed disabled:opacity-30 w-full flex justify-between items-center hover:bg-white/15 cursor-pointer rounded-xl text-white sm:text-sm text-xs sm:p-2 p-1.5">
+                      {m.label}
+                      {m.type === chatMode && < CheckIcon size={18} />}
+                    </button>
+                  </TooltipTrigger>
+                  {m.type === 'details' && <TooltipContent direction="left">
+                    Coming soon
+                  </TooltipContent>}
+                </Tooltip>
               ))
             }
           </div>
