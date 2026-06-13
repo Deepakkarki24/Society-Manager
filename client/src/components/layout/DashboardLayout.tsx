@@ -17,7 +17,7 @@ export const DashboardLayout = () => {
   if (!user) return null;
 
   return (
-    <div className="relative flex min-h-screen">
+    <div className="relative sm:flex block">
       <Sidebar role={user.role} />
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
@@ -30,9 +30,9 @@ export const DashboardLayout = () => {
           </div>
         </div>
       )}
-      <div className="chatDashboard flex flex-1 flex-col h-full">
+      <div className="chatDashboard flex flex-1 flex-col">
         <Header setShowLogoutModal={setShowLogoutModal} onMenuClick={() => setMobileOpen(true)} />
-        <main className="flex flex-1 p-4 lg:p-6 max-h-[90dvh] h-full overflow-y-auto">
+        <main className="flex flex-1 p-4 lg:p-6 max-h-[90dvh] h-full">
           <Outlet />
         </main>
       </div>

@@ -118,7 +118,7 @@ export const SidebarMobile: React.FC<SidebarMobileProps> = ({ role }) => {
               {label}
 
             </NavLink>
-            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-xs tracking-wide text-primary-400 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
+            {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-[10px] sm:text-xs tracking-wide text-primary-500/80 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
           </div>
         ))}
       </nav>

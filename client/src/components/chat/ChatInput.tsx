@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Paperclip, Send, XIcon } from "lucide-react";
+import { CheckIcon, Paperclip, Send, XIcon } from "lucide-react";
 import { generateComplaint } from "@/api-manager/requestHandler";
 import toast from "react-hot-toast";
 import { fileToBase64 } from "@/utils/utils";
-import { SpinnerGapIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, CaretUpIcon, SpinnerGapIcon } from "@phosphor-icons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/Tooltip";
 
 interface ChatInputInterface {
@@ -12,6 +12,25 @@ interface ChatInputInterface {
   fetchCurrentSessionChats: (params: { sessionId: string; }) => void
 }
 
+type CHAT_MODE = "complaint" | "details"
+
+interface ChatModeInterface {
+  type: CHAT_MODE,
+  label: string
+}
+
+const CHAT_MODES: ChatModeInterface[] = [
+  {
+    type: "complaint",
+    label: "Complaint"
+  },
+  {
+    type: "details",
+    label: "Details"
+  }
+]
+
+
 const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessions, fetchCurrentSessionChats }) => {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -19,6 +38,10 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isBottom, setIsBottom] = useState<boolean>(false)
   const [previewImage, setPreviewImage] = useState("")
+
+  const [chatMode, setChatMode] = useState<CHAT_MODE>("complaint")
+  const [showChatModeDropdown, setShowChatModeDropdown] = useState<boolean>(false)
+
 
   const handleSend = async () => {
     setIsLoading(true)
@@ -109,7 +132,7 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-text-secondary transition hover:bg-primary-400/10 hover:text-primary-400 cursor-pointer"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-text-secondary transition hover:bg-white/10 hover:text-primary-400 cursor-pointer"
             >
               <Paperclip size={20} />
             </button>
@@ -130,10 +153,45 @@ const ChatInput: React.FC<ChatInputInterface> = ({ currentSessionId, fecthSessio
           ref={textareaRef}
           rows={1}
           value={message}
-          placeholder="Report an issue or ask Society AI..."
+          placeholder={`${chatMode === "complaint"
+            ? "Describe your issue (e.g., water leakage, maintenance, security, etc.)"
+            : "Ask anything about society rules, facilities, notices, or regulations.."}`}
           onChange={handleChange}
           className="max-h-40 flex-1 py-3 resize-none bg-transparent outline-none text-base text-text-primary placeholder:text-white/50"
         />
+
+        {/*chat mode*/}
+        <button
+          onClick={() => setShowChatModeDropdown((prev) => !prev)}
+          className="p-2 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10">
+          <span className="flex gap-1 items-center text-white text-sm font-stretch-extra-condensed tracking-wider">
+            {chatMode.toUpperCase()[0] + chatMode.toLowerCase().slice(1)}
+            {!showChatModeDropdown ? <CaretUpIcon size={18} /> :
+              <CaretDownIcon size={18} />}
+          </span>
+        </button>
+
+        {
+          showChatModeDropdown &&
+          <div className="w-40 absolute bottom-20 right-4 p-2 bg-white/10 rounded-xl">
+            {
+              CHAT_MODES.map((m, idx) => (
+                <div
+                  onClick={() => {
+                    setChatMode(m.type)
+                    setShowChatModeDropdown(false)
+                  }}
+                  key={idx} className="w-full flex justify-between items-center hover:bg-white/15 cursor-pointer rounded-xl text-white text-sm p-2">
+                  <span>{m.label}</span>
+                  {m.type === chatMode && < CheckIcon size={18} />}
+
+                </div>
+              ))
+            }
+          </div>
+        }
+
+        {/* chat mode*/}
 
         {/* Send Button */}
         <Tooltip>

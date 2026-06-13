@@ -251,18 +251,18 @@ export const DashboardPage = () => {
     <>
       {(user?.role === "resident" || user?.role === "maintenance_staff") &&
         (
-          <div className="relative flex flex-col w-full max-sm:h-dvh min-h-[80dvh] max-w-4xl mx-auto">
+          <div className="relative flex flex-col w-full max-sm:h-screen min-h-[80dvh] max-w-4xl mx-auto">
 
             {/* Session Header */}
             {(sessions.some((s) => s.userId === user?._id)) && sessions.length > 0 && (
-              <div className="absolute top-0 w-full z-20 mb-6">
+              <div className="sticky top-0 w-full z-20 mb-6">
                 <div className="flex items-center gap-2 p-2 glass-strong rounded-xl">
 
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         onClick={createNewChatSession}
-                        className="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl ring-1 ring-primary-400/25 transition-colors cursor-pointer"
+                        className="shrink-0 sm:w-10 sm:h-10 w-8 h-8 flex items-center justify-center rounded-xl ring-1 ring-primary-400/25 transition-colors cursor-pointer"
                       >
                         <PlusIcon size={22} className="text-white" />
                       </button>
@@ -288,13 +288,13 @@ export const DashboardPage = () => {
                         <button
                           key={s._id}
                           onClick={() => handleSessionClick(s._id)}
-                          className={`shrink-0 cursor-pointer px-4 py-2 rounded-xl whitespace-nowrap transition-all duration-200
+                          className={`shrink-0 cursor-pointer sm:px-4 sm:py-2 px-2 py-1 rounded-xl whitespace-nowrap transition-all duration-200
                   ${currentSessionId === s._id
                               ? "bg-linear-to-br from-[#00c8ff75]  to-[#0073ff66] text-white shadow-md shadow-primary-600/25"
                               : "bg-white/5 backdrop-blur-sm text-text-secondary hover:bg-surface-card hover:text-text-primary"
                             }`}
                         >
-                          {s.title}
+                          <span className="text-xs sm:text-base">{s.title}</span>
                         </button>
                       ))
                     )}
@@ -306,7 +306,7 @@ export const DashboardPage = () => {
             {/* Chat Area */}
             <div
               ref={chatContainerRef}
-              className="flex-1 flex flex-col gap-4 pt-18 overflow-y-auto sm:pb-6 sm:pt-20 scroll-smooth">
+              className="flex-1 flex flex-col gap-4 pt-2 overflow-y-auto sm:pb-6 sm:pt-4 scroll-smooth">
 
               {/* Loading State */}
               {isChatFecthing && (

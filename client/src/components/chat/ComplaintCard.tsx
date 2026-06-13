@@ -41,14 +41,14 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
             }
             <div className="flex items-start justify-between gap-4">
                 <div>
-                    <h3 className="sm:text-lg text-base font-semibold text-text-primary">{title}</h3>
-                    <p className="mt-1 text-sm text-text-muted">
+                    <h3 className="sm:text-lg text-[13px] font-semibold text-text-primary">{title}</h3>
+                    <p className="mt-1 sm:text-sm text-[10px] text-text-muted">
                         {formatted}
                     </p>
                 </div>
 
                 <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${priorityColors[priority]
+                    className={`rounded-full sm:px-3 sm:py-1 px-2 sm:text-xs text-[10px] font-medium capitalize ${priorityColors[priority]
                         }`}
                 >
                     {priority}
@@ -56,21 +56,23 @@ export const ComplaintCard: React.FC<ComplaintCardProps> = ({ title, description
             </div>
 
             {/* Description */}
-            <p className="mt-4 line-clamp-3 text-sm sm:leading-6 text-text-secondary">
+            <p className="mt-4 line-clamp-3 sm:text-sm text-xs sm:leading-6 text-text-secondary">
                 {description}
             </p>
 
             {/* Footer */}
             <div className="mt-5 flex flex-wrap items-center gap-2 relative">
-                <span className="rounded-lg bg-primary-400/15 px-3 py-1 text-xs font-medium text-primary-300 ring-1 ring-primary-400/20">
+                <span className="rounded-lg bg-primary-400/15 sm:px-3 sm:py-1 px-2 sm:text-xs text-[10px] font-medium text-primary-300 ring-1 ring-primary-400/20">
                     {category}
                 </span>
 
-                <span className="rounded-lg bg-surface-hover px-3 py-1 text-xs font-medium text-text-secondary ring-1 ring-border-subtle">
+                <span className="rounded-lg bg-surface-hover sm:px-3 sm:py-1 px-2 sm:text-xs text-[10px] font-medium text-text-secondary ring-1 ring-border-subtle">
                     {status}
                 </span>
 
-                <span className="text-white text-xs font-semibold absolute right-0 bottom-0">Complaint generated</span>
+                <span className="text-white/60 sm:w-fit w-full mt-3 text-[10px] font-semibold">
+                    Complaint generated
+                </span>
             </div>
         </div>
     );

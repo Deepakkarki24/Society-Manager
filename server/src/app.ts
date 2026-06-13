@@ -19,7 +19,7 @@ export const createApp = () => {
   app.use(helmet());
   app.use(
     cors({
-      origin: CLIENT_URL || "http://localhost:5173",
+      origin: [(CLIENT_URL || "http://localhost:5173"), "http://192.168.43.35:5173/"],
       credentials: true,
     }),
   );

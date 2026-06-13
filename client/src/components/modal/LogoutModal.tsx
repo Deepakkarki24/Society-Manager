@@ -36,16 +36,16 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ setLogoutModal, isOpen }) => 
 
     return (
         <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div className="relative m-auto max-w-sm w-full glass-strong ai-glow rounded-2xl p-8 flex flex-col justify-between items-center">
+            <div className="relative m-auto max-w-63 sm:max-w-sm w-full glass-strong ai-glow rounded-2xl p-8 flex flex-col justify-between items-center">
                 <XIcon
                     onClick={() => setLogoutModal(false)}
                     className="cursor-pointer absolute top-4 right-4 text-text-secondary hover:text-text-primary transition rounded-lg p-1.5 hover:bg-surface-hover"
                     size={24}
                 />
-                <p className="sm:text-xl text-sm font-semibold text-text-primary pt-6">
+                <p className="sm:text-xl text-base font-semibold text-text-primary pt-6">
                     Do you want to logout?
                 </p>
-                <Button onClick={handleLogout} className="mt-6">Logout</Button>
+                <Button onClick={handleLogout} className="mt-6 font-semibold">Logout</Button>
             </div>
         </div>
     );
