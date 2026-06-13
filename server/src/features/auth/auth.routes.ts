@@ -12,18 +12,19 @@ import { authenticate } from "../../middleware/auth";
 
 const router = Router();
 
-router.use(authenticate);
-
 router.post("/register", registerValidation, register);
 router.post("/login", loginValidation, login);
-router.get("/me", getMe);
-router.patch("/profile", updateProfile);
+
+
+router.get("/me", authenticate, getMe);
+router.patch("/profile", authenticate, updateProfile);
 router.patch(
   "/change-password",
   [
     body("currentPassword").notEmpty(),
     body("newPassword").isLength({ min: 6 }),
   ],
+  authenticate,
   changePassword,
 );
 
