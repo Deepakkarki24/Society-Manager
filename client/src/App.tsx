@@ -5,7 +5,6 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { RegisterPage } from "@/pages/auth/RegisterPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
-import { ComplaintsPage } from "@/pages/complaints/ComplaintsPage";
 import { CreateComplaintPage } from "@/pages/complaints/CreateComplaintPage";
 import { ComplaintDetailPage } from "@/pages/complaints/ComplaintDetailPage";
 import { AnnouncementsPage } from "@/pages/announcements/AnnouncementsPage";
@@ -53,7 +52,6 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/complaints" element={<ComplaintsPage />} />
             <Route path="/complaints/new" element={<CreateComplaintPage />} />
             <Route path="/complaints/:id" element={<ComplaintDetailPage />} />
             <Route path="/announcements" element={<AnnouncementsPage />} />
