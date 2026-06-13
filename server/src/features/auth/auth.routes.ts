@@ -6,6 +6,7 @@ import {
   getMe,
   updateProfile,
   changePassword,
+  logout,
 } from "./auth.controller";
 import { body } from "express-validator";
 import { authenticate } from "../../middleware/auth";
@@ -14,6 +15,7 @@ const router = Router();
 
 router.post("/register", registerValidation, register);
 router.post("/login", loginValidation, login);
+router.get("/logout", authenticate, logout);
 
 
 router.get("/me", authenticate, getMe);

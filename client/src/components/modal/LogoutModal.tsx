@@ -4,6 +4,8 @@ import { Button } from "../ui/Button";
 import { useAppDispatch } from "@/store/hooks";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/store/slices/authSlice";
+import api from "@/api-manager/apiInterceptor";
+import toast from "react-hot-toast";
 
 interface LogoutModalProps {
     setLogoutModal: (open: boolean) => void;
@@ -15,7 +17,11 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ setLogoutModal, isOpen }) => 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await api.get("/api/auth/logout")
+            .then(() => toast.success("Logged out!"))
+            .catch((err) => toast.error(err.message))
+
         dispatch(logout());
         navigate("/login");
     };

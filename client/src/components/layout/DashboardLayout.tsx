@@ -30,7 +30,7 @@ export const DashboardLayout = () => {
           </div>
         </div>
       )}
-      <div className="chatDashboard flex flex-1 flex-col">
+      <div className="chatDashboard flex flex-1 flex-col overflow-y-auto">
         <Header setShowLogoutModal={setShowLogoutModal} onMenuClick={() => setMobileOpen(true)} />
         <main className="flex flex-1 p-4 lg:p-6 max-h-[90dvh] h-full">
           <Outlet />

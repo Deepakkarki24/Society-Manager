@@ -5,7 +5,6 @@ import { createAuditLog } from "../../services/audit.service";
 import { signToken } from "../../utils/token";
 import { NODE_ENV } from "../../config/env";
 import { User } from "../../models/User";
-import { ChatSession } from "../../models/chat/ChatSession";
 
 export const register = async (req: AuthRequest, res: Response) => {
   try {
@@ -31,18 +30,12 @@ export const register = async (req: AuthRequest, res: Response) => {
       user.society?.toString(),
     );
 
-    // const isUserHasSession = await ChatSession.find()
-
-    // if (!isUserHasSession) {
-    //   await ChatSession.create()
-    // }
-
     await createAuditLog(req, "register", "User", user._id.toString());
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -85,7 +78,7 @@ export const login = async (req: AuthRequest, res: Response) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: NODE_ENV === "production" ? "none" : "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -103,6 +96,19 @@ export const login = async (req: AuthRequest, res: Response) => {
   }
 
   return successResponse(res, 200, "Loggedin successfully!", data)
+};
+
+export const logout = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) return errorResponse(res, 401, "User not found or already logged out!")
+
+    res.clearCookie("token")
+
+    return successResponse(res, 200, "Logged out successfully!")
+  }
+  catch (err) {
+    return errorResponse(res, 500, (err as any).message)
+  }
 };
 
 export const getMe = async (req: AuthRequest, res: Response) => {
