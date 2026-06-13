@@ -120,8 +120,22 @@ export const SidebarMobile: React.FC<SidebarMobileProps> = ({ role }) => {
                 }`
               }
             >
-              <Icon className="h-5 w-5" />
-              {label}
+              {
+                role === "resident" && type === "complaints"
+                  ? <div className='flex items-center gap-2'>
+                    <Icon className="h-5 w-5" />
+                    Your Complaints
+                  </div>
+                  : role === "resident" && type === "dashboard"
+                    ? <div className='flex items-center gap-2'>
+                      <RobotIcon size={22} />
+                      AI Assistant
+                    </div>
+                    : <div className='flex items-center gap-2'>
+                      <Icon className="h-5 w-5" />
+                      {label}
+                    </div>
+              }
 
             </NavLink>
             {(type === "visitors" || type === 'payments') && <span className='absolute w-full h-full text-[10px] sm:text-xs tracking-wide text-primary-500/80 cursor-not-allowed top-0 left-0 flex justify-end p-2 items-center font-semibold z-9999'>Coming soon</span>}
