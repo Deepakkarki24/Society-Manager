@@ -8,10 +8,12 @@ import {
   changePassword,
 } from "./auth.controller";
 import { body } from "express-validator";
+import { authenticate } from "../../middleware/auth";
 
 const router = Router();
 
-// need to add middleware
+router.use(authenticate);
+
 router.post("/register", registerValidation, register);
 router.post("/login", loginValidation, login);
 router.get("/me", getMe);

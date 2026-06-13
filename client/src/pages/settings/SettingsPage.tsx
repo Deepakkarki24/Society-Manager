@@ -21,10 +21,18 @@ export const SettingsPage = () => {
     rating: 5,
   });
 
+  const getAuth = async () => {
+    try {
+      await api
+        .get("/api/auth/me")
+        .then(({ data }) => setFamily(data.data.familyMembers || []));
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
-    api
-      .get("/api/auth/me")
-      .then(({ data }) => setFamily(data.data.familyMembers || []));
+    getAuth()
   }, []);
 
   const onProfile = async (data: { name?: string; phone?: string }) => {
