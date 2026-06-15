@@ -9,6 +9,7 @@ AI-Powered Society Operations Platform that enables residents to create complain
 | Frontend | React, TypeScript, Tailwind CSS, Redux Toolkit, React Router, Axios, Socket.IO Client, Recharts |
 | Backend | Node.js, Express, MongoDB, Mongoose, JWT, Socket.IO |
 | Auth | JWT + Role-Based Access Control |
+| AI inetgration (Gemini - 2.5 flash)
 
 ## User Roles
 
@@ -74,8 +75,6 @@ App: `http://localhost:5173`
 - `/api/societies` — Society CRUD (Super Admin)
 - `/api/complaints` — Complaint lifecycle
 - `/api/announcements` — Society announcements
-- `/api/visitors` — Pre-approval & security logs
-- `/api/payments` — Maintenance billing
 - `/api/notifications` — In-app notifications
 - `/api/analytics` — Dashboard & platform stats
 - `/api/audit-logs` — Activity audit trail
@@ -84,8 +83,6 @@ App: `http://localhost:5173`
 
 - Complaint categories, comments, images, and reopening
 - Real-time notifications via Socket.IO
-- Maintenance invoice generation & payment tracking (gateway-ready)
-- Dark/light theme in Settings
 - Pagination, search, filtering on list endpoints
 - Image uploads for now (falls back to base64 without credentials)
 
